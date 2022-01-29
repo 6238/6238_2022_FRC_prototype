@@ -9,7 +9,8 @@ import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
     private final WPI_TalonSRX rotationalController;
-    private final CANSparkMax translationalController;
+    private final CANSparkMax translationalControllerLeft;
+    private final CANSparkMax translationalControllerRight;
     private double rotationalSpeed;
     private double translationalSpeed;
 
@@ -18,7 +19,8 @@ public class ClimberSubsystem extends SubsystemBase {
         rotationalSpeed = 0.0;
         translationalSpeed = 0.0;
         rotationalController = new WPI_TalonSRX(Constants.TALON_SRX_ID);
-        translationalController = new CANSparkMax(Constants.SPARK_MAX_ID, MotorType.kBrushless);
+        translationalControllerLeft = new CANSparkMax(Constants.SPARK_MAX_ID_LEFT, MotorType.kBrushless);
+        translationalControllerRight = new CANSparkMax(Constants.SPARK_MAX_ID_RIGHT, MotorType.kBrushless);
     }
 
     public void setRotation(double speed) {
@@ -32,6 +34,7 @@ public class ClimberSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         rotationalController.set(rotationalSpeed);
-        translationalController.set(translationalSpeed);
+        translationalControllerLeft.set(translationalSpeed);
+        translationalControllerRight.set(-translationalSpeed);
     }
 }

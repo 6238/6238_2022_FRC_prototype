@@ -12,7 +12,7 @@ public class ClimberCommand extends CommandBase {
     private double translationSpeed;
 
     public ClimberCommand(ClimberSubsystem climber, Joystick joystick) {
-        rotationMaxSpeed = 0.0;
+        rotationMaxSpeed = 0.5;
         translationSpeed = 0.0;
         this.joystick = joystick;
         this.climberSubsystem = climber;
