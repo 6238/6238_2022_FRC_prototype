@@ -7,9 +7,9 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveCommand extends CommandBase {
     private final DriveSubsystem drive;
     private final Joystick joystick;
-    
+
     public DriveCommand(DriveSubsystem drive, Joystick joystick) {
-    
+
         this.joystick = joystick;
         this.drive = drive;
 
@@ -25,7 +25,7 @@ public class DriveCommand extends CommandBase {
         if (Math.abs(y) < 0.3) {
             y = 0;
         }
-        
+
         drive.setDrive(-y, x);
     }
 
