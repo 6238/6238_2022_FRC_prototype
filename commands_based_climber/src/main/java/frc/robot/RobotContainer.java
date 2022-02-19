@@ -7,12 +7,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.DriveCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   private final ClimberSubsystem climberSubsystem;
   private final ClimberCommand climberCommand;
+  private final DriveSubsystem driveSubsystem;
+  private final DriveCommand driveCommand;
   private final Joystick joystick;
 
   public RobotContainer() {
@@ -20,6 +24,11 @@ public class RobotContainer {
     climberSubsystem = new ClimberSubsystem();
     climberCommand = new ClimberCommand(climberSubsystem, joystick);
     climberSubsystem.setDefaultCommand(climberCommand);
+
+    driveSubsystem = new DriveSubsystem();
+    driveCommand = new DriveCommand(driveSubsystem, joystick);
+    driveSubsystem.setDefaultCommand(driveCommand);
+
     configureButtonBindings();
   }
 

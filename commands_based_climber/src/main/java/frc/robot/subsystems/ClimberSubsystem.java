@@ -18,9 +18,9 @@ public class ClimberSubsystem extends SubsystemBase {
     public ClimberSubsystem() {
         rotationalSpeed = 0.0;
         translationalSpeed = 0.0;
-        rotationalController = new WPI_TalonSRX(Constants.TALON_SRX_ID);
-        translationalControllerLeft = new CANSparkMax(Constants.SPARK_MAX_ID_LEFT, MotorType.kBrushless);
-        translationalControllerRight = new CANSparkMax(Constants.SPARK_MAX_ID_RIGHT, MotorType.kBrushless);
+        rotationalController = new WPI_TalonSRX(Constants.CLIMBER_ROTATION_ID);
+        translationalControllerLeft = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_LEFT, MotorType.kBrushless);
+        translationalControllerRight = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_RIGHT, MotorType.kBrushless);
     }
 
     public void setRotation(double speed) {
