@@ -22,13 +22,12 @@ public class RobotContainer {
   private DriveCommand driveCommand;
   private BallSubsystem ballSubsystem;
   private BallManualCommand ballManualCommand;
-  private CameraSubsystem cameraSubsystem;
   private Joystick joystick;
 
   private void addClimber() {
     joystick = new Joystick(IOConstants.JOYSTICK_PORT);
     climberSubsystem = new ClimberSubsystem();
-    climberCommand = new ClimberCommand(climberSubsystem, joystick);
+    climberCommand = new ClimberCommand(climberSubsystem);
     climberSubsystem.setDefaultCommand(climberCommand);
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_UP)
@@ -38,22 +37,36 @@ public class RobotContainer {
     new JoystickButton(joystick, IOConstants.TRANSLATE_DOWN)
       .whenPressed(() -> climberCommand.setTranslationSpeed(-1.0))
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0)); 
+
+    climberCommand.setRotationalSpeed(joystick.getY());
   }
 
   private void addDrive() {
     driveSubsystem = new DriveSubsystem();
-    driveCommand = new DriveCommand(driveSubsystem, joystick);
+    driveCommand = new DriveCommand(driveSubsystem);
     driveSubsystem.setDefaultCommand(driveCommand);
+
+    driveCommand.setDrive(-joystick.getY(), joystick.getX());
   }
 
   private void addBall() {
     ballSubsystem = new BallSubsystem();
-    ballManualCommand = new BallManualCommand(ballSubsystem, joystick);
+    ballManualCommand = new BallManualCommand(ballSubsystem);
     ballSubsystem.setDefaultCommand(ballManualCommand);
+
+    new JoystickButton(joystick, IOConstants.EXTEND_INTAKE)
+      .whenPressed(() -> ballManualCommand.setExtendSpeed(1.0));
+
+    new JoystickButton(joystick, IOConstants.RETRACT_INTAKE)
+      .whenPressed(() -> ballManualCommand.setExtendSpeed(-1.0));
+
+    new JoystickButton(joystick, IOConstants.START_INTAKE)
+      .whenPressed(() -> ballManualCommand.startIntake())
+      .whenReleased(() -> ballManualCommand.stopIntake());
   }
 
   private void addCamera() {
-    cameraSubsystem = new CameraSubsystem();
+    new CameraSubsystem();
   }
 
   public RobotContainer() {
