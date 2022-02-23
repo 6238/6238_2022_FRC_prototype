@@ -32,20 +32,23 @@ public class RobotContainer {
     climberSubsystem.setDefaultCommand(climberCommand);
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_UP)
-      .whenPressed(() -> climberCommand.setTranslationSpeed(1.0))
+      .whenPressed(() -> climberCommand.setTranslationSpeed(0.2))
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_DOWN)
-      .whenPressed(() -> climberCommand.setTranslationSpeed(-1.0))
+      .whenPressed(() -> climberCommand.setTranslationSpeed(-0.2))
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.ROTATE_UP)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(1.0))
+      .whenPressed(() -> climberCommand.setRotationalSpeed(0.2))
       .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.ROTATE_DOWN)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(-1.0))
+      .whenPressed(() -> climberCommand.setRotationalSpeed(-0.2))
       .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
+
+    new JoystickButton(joystick, IOConstants.TRANSLATE_TOGGLE)
+      .whenPressed(() -> climberCommand.toggleTranslationalSpeed());
 
   }
 
@@ -66,31 +69,21 @@ public class RobotContainer {
 
     new JoystickButton(joystick, IOConstants.RETRACT_INTAKE)
       .whenPressed(() -> ballManualCommand.setExtendSpeed(-1.0));
-  }
-  private void configureButtonBindings() {
-    
-
 
     new JoystickButton(joystick, IOConstants.START_INTAKE)
       .whenPressed(() -> ballManualCommand.startIntake())
       .whenReleased(() -> ballManualCommand.stopIntake());
   }
 
-  private void addCamera() {
-    new CameraSubsystem();
+  private void addCamera() {  
+    cameraSubsystem = new CameraSubsystem();
   }
 
   public RobotContainer() {
-    cameraSubsystem = new CameraSubsystem();
     addClimber();
     addDrive();
-    addBall();
+   // addBall();
     addCamera();
-      new JoystickButton(joystick, IOConstants.TRANSLATE_TOGGLE)
-      .whenPressed(() -> climberCommand.toggleTranslationalSpeed());
-
-      new JoystickButton(joystick, IOConstants.ROTATIONAL_TOGGLE)
-      .whenPressed(() -> climberCommand.toggleTranslationalSpeed());
 
   }
 
