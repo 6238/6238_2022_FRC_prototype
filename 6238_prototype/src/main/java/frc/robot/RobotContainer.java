@@ -32,19 +32,19 @@ public class RobotContainer {
     climberSubsystem.setDefaultCommand(climberCommand);
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_UP)
-      .whenPressed(() -> climberCommand.setTranslationSpeed(0.2))
+      .whenPressed(() -> climberCommand.setTranslationSpeed(1.0))
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_DOWN)
-      .whenPressed(() -> climberCommand.setTranslationSpeed(-0.2))
+      .whenPressed(() -> climberCommand.setTranslationSpeed(-1.0))
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.ROTATE_UP)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(0.2))
+      .whenPressed(() -> climberCommand.setRotationalSpeed(1.0))
       .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.ROTATE_DOWN)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(-0.2))
+      .whenPressed(() -> climberCommand.setRotationalSpeed(-1.0))
       .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_TOGGLE)
@@ -56,7 +56,6 @@ public class RobotContainer {
     driveSubsystem = new DriveSubsystem();
     driveCommand = new DriveCommand(driveSubsystem, joystick);
     driveSubsystem.setDefaultCommand(driveCommand);
-
   }
 
   private void addBall() {
@@ -82,7 +81,7 @@ public class RobotContainer {
   public RobotContainer() {
     addClimber();
     addDrive();
-   // addBall();
+    addBall();
     addCamera();
 
   }

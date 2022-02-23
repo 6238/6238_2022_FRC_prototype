@@ -10,5 +10,5 @@ public final class IOConstants {
     public static final int ROTATE_UP = 7;
     public static final int ROTATE_DOWN = 8;
     public static final int TRANSLATE_TOGGLE = 11;
-    public static final int ROTATIONAL_TOGGLE = 12;
+    
 }

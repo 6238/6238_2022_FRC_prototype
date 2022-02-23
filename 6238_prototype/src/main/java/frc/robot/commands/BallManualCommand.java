@@ -14,16 +14,11 @@ public class BallManualCommand extends CommandBase {
     private double lowerSpeed;
     private double upperSpeed;
     private double extendSpeed;
-    private final DigitalInput frontLimitSwitch;
-    private final DigitalInput backLimitSwitch;
 
     public BallManualCommand(BallSubsystem ball) {
         lowerSpeed = 0;
         upperSpeed = 0;
         extendSpeed = 0;
-
-        frontLimitSwitch = new DigitalInput(Constants.INTAKE_FRONT_LIMIT_SWITCH);
-        backLimitSwitch =  new DigitalInput(Constants.INTAKE_BACK_LIMIT_SWITCH);
 
         SmartDashboard.putNumber("lowerIntakeSpeed", lowerUserSpeed);
         lowerUserSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserSpeed);
@@ -52,11 +47,7 @@ public class BallManualCommand extends CommandBase {
     }
 
     public void setExtendSpeed(double speed) {
-        if (frontLimitSwitch.get()) {
-            extendSpeed = Math.min(speed, 0);
-        } else if (backLimitSwitch.get()) {
-            extendSpeed = Math.max(0, speed);
-        }
+
     }
 
     @Override
