@@ -23,6 +23,7 @@ public class RobotContainer {
   private BallSubsystem ballSubsystem;
   private BallManualCommand ballManualCommand;
   private Joystick joystick;
+  private CameraSubsystem cameraSubsystem;
 
   private void addClimber() {
     joystick = new Joystick(IOConstants.JOYSTICK_PORT);
@@ -36,17 +37,23 @@ public class RobotContainer {
 
     new JoystickButton(joystick, IOConstants.TRANSLATE_DOWN)
       .whenPressed(() -> climberCommand.setTranslationSpeed(-1.0))
-      .whenReleased(() -> climberCommand.setTranslationSpeed(0.0)); 
+      .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
-    climberCommand.setRotationalSpeed(joystick.getY());
+    new JoystickButton(joystick, IOConstants.ROTATE_UP)
+      .whenPressed(() -> climberCommand.setRotationalSpeed(1.0))
+      .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
+
+    new JoystickButton(joystick, IOConstants.ROTATE_DOWN)
+      .whenPressed(() -> climberCommand.setRotationalSpeed(-1.0))
+      .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
+
   }
 
   private void addDrive() {
     driveSubsystem = new DriveSubsystem();
-    driveCommand = new DriveCommand(driveSubsystem);
+    driveCommand = new DriveCommand(driveSubsystem, joystick);
     driveSubsystem.setDefaultCommand(driveCommand);
 
-    driveCommand.setDrive(-joystick.getY(), joystick.getX());
   }
 
   private void addBall() {
@@ -61,18 +68,8 @@ public class RobotContainer {
       .whenPressed(() -> ballManualCommand.setExtendSpeed(-1.0));
   }
   private void configureButtonBindings() {
-    new JoystickButton(joystick, IOConstants.TRANSLATE_UP)
-      .whenPressed(() -> climberCommand.setTranslationSpeed(1.0))
-      .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
     
-      new JoystickButton(joystick, IOConstants.ROTATE_UP)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(1.0))
-      .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
 
-      
-     new JoystickButton(joystick, IOConstants.ROTATE_DOWN)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(-1.0))
-      .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.START_INTAKE)
       .whenPressed(() -> ballManualCommand.startIntake())
@@ -84,6 +81,7 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
+    cameraSubsystem = new CameraSubsystem();
     addClimber();
     addDrive();
     addBall();
