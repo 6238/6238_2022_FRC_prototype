@@ -14,14 +14,14 @@ public class ClimberCommand extends CommandBase {
     private double rotationMaxSpeed;
     private double translationMaxSpeed;
     private double translationUserSpeed;
-    private double rotationalSpeed;
+    private double rotationUserSpeed;
     private boolean enableLimitSwitch;
 
     public ClimberCommand(ClimberSubsystem climber) {
-        rotationMaxSpeed = 0;
-        translationMaxSpeed = .5;
+        rotationMaxSpeed = 0.75;
+        translationMaxSpeed = .75;
         translationUserSpeed = 0;
-        rotationalSpeed = 0;
+        rotationUserSpeed = 0;
         enableLimitSwitch = true;
         this.climberSubsystem = climber;
         addRequirements(climberSubsystem);
@@ -36,14 +36,22 @@ public class ClimberCommand extends CommandBase {
         } else { 
             climberSubsystem.setTranslation(translationUserSpeed * translationMaxSpeed);
         }  
-       
-        climberSubsystem.setRotation(rotationalSpeed * rotationMaxSpeed);
+
+        if (enableLimitSwitch && rotationUserSpeed <0 && rotationLimit.get()) {
+            climberSubsystem.setRotation(0);
+        } else if (enableLimitSwitch && rotationUserSpeed >0 && rotationLimit.get()) {
+            climberSubsystem.setRotation(0);
+        } else { 
+            climberSubsystem.setRotation(rotationUserSpeed * rotationMaxSpeed);
+        }
     }  
 
     public void setTranslationSpeed(double speed) {
         translationUserSpeed = speed;
     }
-
+    public void setRotation(double speed) {
+        rotationUserSpeed = speed;
+    }
     public void toggleTranslationalSpeed() {
         if (translationUserSpeed == 0) {
             translationUserSpeed = 1;
@@ -52,7 +60,7 @@ public class ClimberCommand extends CommandBase {
     }
 
     public void toggleRotationalSpeed() {
-        rotationalSpeed = - rotationalSpeed;
+        rotationUserSpeed = - rotationUserSpeed;
     }
 
     public void setMaxRotationalSpeed(double speed) {
@@ -60,7 +68,7 @@ public class ClimberCommand extends CommandBase {
     }
 
     public void setRotationalSpeed(double speed) {
-        rotationalSpeed = speed;
+        rotationUserSpeed = speed;
     }
 
     @Override
