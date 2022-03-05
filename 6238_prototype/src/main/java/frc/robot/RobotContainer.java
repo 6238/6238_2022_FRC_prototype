@@ -65,11 +65,11 @@ public class RobotContainer {
 
     new JoystickButton(joystick, IOConstants.START_INTAKE)
       .whenPressed(() -> ballManualCommand.startIntake())
-      .whenReleased(() -> ballManualCommand.stopIntake());
+      .whenReleased(() -> ballManualCommand.motorOff());
   
     new JoystickButton(joystick, IOConstants.START_SHOOTER)
       .whenPressed(() -> ballManualCommand.startShooter())
-      .whenReleased(() -> ballManualCommand.stopShooter());
+      .whenReleased(() -> ballManualCommand.motorOff());
   }
 
   private void addCamera() {  

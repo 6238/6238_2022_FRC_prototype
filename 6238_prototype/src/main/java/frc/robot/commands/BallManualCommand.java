@@ -1,82 +1,72 @@
 
 package frc.robot.commands;
 
+import java.util.Enumeration;
+
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallSubsystem;
 
 public class BallManualCommand extends CommandBase {
     private final BallSubsystem ball;
-    private double lowerUserIntakeSpeed;
-    private double upperUserIntakeSpeed;
-    private double lowerUserShooterSpeed;
-    private double upperUserShooterSpeed;
-    private double lowerIntakeSpeed;
-    private double upperIntakeSpeed;
-    private double lowerShooterSpeed;
-    private double upperShooterSpeed;
-
-    private boolean shooterEnabled;
-
+    private enum ModeStates {SHOOTING, INTAKING};
+    private ModeStates mode;
+    private boolean motorOn;
+ 
     public BallManualCommand(BallSubsystem ball) {
-        shooterEnabled = false;
+        //swtiches between referencing shooter or intake power value
+        mode = ModeStates.SHOOTING;
+        motorOn = false;
 
-        lowerIntakeSpeed = 0;
-        upperIntakeSpeed = 0;
-        lowerShooterSpeed = 0;
-        upperShooterSpeed = 0;
+        //makes the dashboard
+        double lowerUI = SmartDashboard.getNumber("lowerIntakeSpeed", 0);
+        SmartDashboard.putNumber("lowerIntakeSpeed", lowerUI);
 
-        lowerUserIntakeSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserIntakeSpeed);
-        SmartDashboard.putNumber("lowerIntakeSpeed", lowerUserIntakeSpeed);
+        double upperUI = SmartDashboard.getNumber("upperIntakeSpeed", 0);
+        SmartDashboard.putNumber("upperIntakeSpeed", upperUI);
 
-        upperUserIntakeSpeed = SmartDashboard.getNumber("upperIntakeSpeed", upperUserIntakeSpeed);
-        SmartDashboard.putNumber("upperIntakeSpeed", upperUserIntakeSpeed);
+        double lowerUI2 = SmartDashboard.getNumber("lowerShooterSpeed", 0);
+        SmartDashboard.putNumber("lowerShooterSpeed", lowerUI2);
 
-        lowerUserShooterSpeed = SmartDashboard.getNumber("lowerShooterSpeed", lowerUserShooterSpeed);
-        SmartDashboard.putNumber("lowerShooterSpeed", lowerUserShooterSpeed);
-
-        upperUserShooterSpeed = SmartDashboard.getNumber("upperShooterSpeed", upperUserShooterSpeed);
-        SmartDashboard.putNumber("upperShooterSpeed", upperUserShooterSpeed);
+        double upperUI2 = SmartDashboard.getNumber("upperShooterSpeed", 0);
+        SmartDashboard.putNumber("upperShooterSpeed", upperUI2);
 
         this.ball = ball;
         addRequirements(ball);
     }
 
     public void execute() {
-        lowerUserIntakeSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserIntakeSpeed);
-        upperUserIntakeSpeed = SmartDashboard.getNumber("upperIntakeSpeed", upperUserIntakeSpeed);
-        lowerUserShooterSpeed = SmartDashboard.getNumber("lowerUserShooterSpeed", lowerUserShooterSpeed);
-        upperUserShooterSpeed = SmartDashboard.getNumber("upperUserShooterSpeed", upperUserShooterSpeed);
-        if (ball.getIsExtended()) {
-            ball.setSpeed(upperIntakeSpeed, lowerIntakeSpeed);
-        } else if (shooterEnabled) {
-            ball.setSpeed(upperShooterSpeed, lowerShooterSpeed);
+        //pull values from dashboard
+        double bottomMotorSpeed = 0;
+        double upperMotorSpeed = 0;
+        if(motorOn){
+            if (mode == ModeStates.INTAKING) {
+                bottomMotorSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", 0);
+                upperMotorSpeed = SmartDashboard.getNumber("upperIntakeSpeed", 0);
+            } else if (mode == ModeStates.SHOOTING) {
+                bottomMotorSpeed = SmartDashboard.getNumber("lowerUserShooterSpeed", 0);
+                upperMotorSpeed = SmartDashboard.getNumber("upperUserShooterSpeed", 0);
+            }
         }
+        ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
     }
 
     public void startShooter() {
-        if (!ball.getIsExtended()) {
-            shooterEnabled = true;
-        }
+        mode = ModeStates.SHOOTING;
+        motorOn = true;
     }
-
-    public void stopShooter() {
-        shooterEnabled = false;
-    }
-
     public void startIntake() {
-        if (!shooterEnabled) {
-            ball.extend();
-            lowerIntakeSpeed = lowerUserIntakeSpeed;
-            upperIntakeSpeed = upperUserIntakeSpeed;
-        }
+        mode = ModeStates.INTAKING;
+        motorOn = true;
     }
 
-    public void stopIntake() {
-        ball.retract();
-        lowerIntakeSpeed = 0;
-        upperIntakeSpeed = 0;
+    //turn off motors
+    public void motorOff() {
+        motorOn = false;
     }
+
 
     @Override
     public boolean isFinished() {
