@@ -15,7 +15,11 @@ public class DriveCommand extends CommandBase {
     }
 
     public void execute() {
-        drive.setDrive(-joystick.getY(), joystick.getX());
+        double speed = Math.abs(joystick.getY()) * joystick.getY();
+        speed *= Math.abs(speed) < 0.05 ? 0 : 1;
+        double rotation = joystick.getX();
+        rotation *= Math.abs(rotation) < 0.05 ? 0 : 1; 
+        drive.setDrive(speed, rotation);
     }
 
     @Override

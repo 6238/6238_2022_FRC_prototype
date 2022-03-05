@@ -2,52 +2,80 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.BallSubsystem;
 
 public class BallManualCommand extends CommandBase {
     private final BallSubsystem ball;
-    private double lowerUserSpeed;
-    private double upperUserSpeed;
-    private double lowerSpeed;
-    private double upperSpeed;
-    private double extendSpeed;
+    private double lowerUserIntakeSpeed;
+    private double upperUserIntakeSpeed;
+    private double lowerUserShooterSpeed;
+    private double upperUserShooterSpeed;
+    private double lowerIntakeSpeed;
+    private double upperIntakeSpeed;
+    private double lowerShooterSpeed;
+    private double upperShooterSpeed;
+
+    private boolean shooterEnabled;
 
     public BallManualCommand(BallSubsystem ball) {
-        lowerSpeed = 0;
-        upperSpeed = 0;
-        extendSpeed = 0;
+        shooterEnabled = false;
 
-        SmartDashboard.putNumber("lowerIntakeSpeed", lowerUserSpeed);
-        lowerUserSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserSpeed);
+        lowerIntakeSpeed = 0;
+        upperIntakeSpeed = 0;
+        lowerShooterSpeed = 0;
+        upperShooterSpeed = 0;
 
-        SmartDashboard.putNumber("upperIntakeSpeed", upperUserSpeed);
-        upperUserSpeed = SmartDashboard.getNumber("upperIntakeSpeed", upperUserSpeed);
+        lowerUserIntakeSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserIntakeSpeed);
+        SmartDashboard.putNumber("lowerIntakeSpeed", lowerUserIntakeSpeed);
+
+        upperUserIntakeSpeed = SmartDashboard.getNumber("upperIntakeSpeed", upperUserIntakeSpeed);
+        SmartDashboard.putNumber("upperIntakeSpeed", upperUserIntakeSpeed);
+
+        lowerUserShooterSpeed = SmartDashboard.getNumber("lowerShooterSpeed", lowerUserShooterSpeed);
+        SmartDashboard.putNumber("lowerShooterSpeed", lowerUserShooterSpeed);
+
+        upperUserShooterSpeed = SmartDashboard.getNumber("upperShooterSpeed", upperUserShooterSpeed);
+        SmartDashboard.putNumber("upperShooterSpeed", upperUserShooterSpeed);
 
         this.ball = ball;
         addRequirements(ball);
     }
 
     public void execute() {
-        lowerUserSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserSpeed);
-        upperUserSpeed = SmartDashboard.getNumber("upperIntakeSpeed", upperUserSpeed);
-        ball.setSpeed(extendSpeed, upperSpeed, lowerSpeed);
+        lowerUserIntakeSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", lowerUserIntakeSpeed);
+        upperUserIntakeSpeed = SmartDashboard.getNumber("upperIntakeSpeed", upperUserIntakeSpeed);
+        lowerUserShooterSpeed = SmartDashboard.getNumber("lowerUserShooterSpeed", lowerUserShooterSpeed);
+        upperUserShooterSpeed = SmartDashboard.getNumber("upperUserShooterSpeed", upperUserShooterSpeed);
+        if (ball.getIsExtended()) {
+            ball.setSpeed(upperIntakeSpeed, lowerIntakeSpeed);
+        } else if (shooterEnabled) {
+            ball.setSpeed(upperShooterSpeed, lowerShooterSpeed);
+        }
+    }
+
+    public void startShooter() {
+        if (!ball.getIsExtended()) {
+            shooterEnabled = true;
+        }
+    }
+
+    public void stopShooter() {
+        shooterEnabled = false;
     }
 
     public void startIntake() {
-        lowerSpeed = lowerUserSpeed;
-        upperSpeed = upperUserSpeed;
+        if (!shooterEnabled) {
+            ball.extend();
+            lowerIntakeSpeed = lowerUserIntakeSpeed;
+            upperIntakeSpeed = upperUserIntakeSpeed;
+        }
     }
 
     public void stopIntake() {
-        lowerSpeed = 0;
-        upperSpeed = 0;
-    }
-
-    public void setExtendSpeed(double speed) {
-
+        ball.retract();
+        lowerIntakeSpeed = 0;
+        upperIntakeSpeed = 0;
     }
 
     @Override

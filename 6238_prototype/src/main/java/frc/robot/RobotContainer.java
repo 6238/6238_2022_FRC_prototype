@@ -63,15 +63,13 @@ public class RobotContainer {
     ballManualCommand = new BallManualCommand(ballSubsystem);
     ballSubsystem.setDefaultCommand(ballManualCommand);
 
-    new JoystickButton(joystick, IOConstants.EXTEND_INTAKE)
-      .whenPressed(() -> ballManualCommand.setExtendSpeed(1.0));
-
-    new JoystickButton(joystick, IOConstants.RETRACT_INTAKE)
-      .whenPressed(() -> ballManualCommand.setExtendSpeed(-1.0));
-
     new JoystickButton(joystick, IOConstants.START_INTAKE)
       .whenPressed(() -> ballManualCommand.startIntake())
       .whenReleased(() -> ballManualCommand.stopIntake());
+  
+    new JoystickButton(joystick, IOConstants.START_SHOOTER)
+      .whenPressed(() -> ballManualCommand.startShooter())
+      .whenReleased(() -> ballManualCommand.stopShooter());
   }
 
   private void addCamera() {  

@@ -8,27 +8,40 @@ import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonSRX talonLeftLeader = new WPI_TalonSRX(Constants.LEFT_LEADER_ID);
-    private final WPI_TalonSRX talonLeftFollower = new WPI_TalonSRX(Constants.LEFT_FOLLOWER_ID);
+    private final WPI_TalonSRX talonLeftFollowerOne = new WPI_TalonSRX(Constants.LEFT_FOLLOWER_ID_ONE);
+    private final WPI_TalonSRX talonLeftFollowerTwo = new WPI_TalonSRX(Constants.LEFT_FOLLOWER_ID_TWO);
     private final WPI_TalonSRX talonRightLeader = new WPI_TalonSRX(Constants.RIGHT_LEADER_ID);
-    private final WPI_TalonSRX talonRightFollower = new WPI_TalonSRX(Constants.RIGHT_FOLLOWER_ID);
+    private final WPI_TalonSRX talonRightFollowerOne = new WPI_TalonSRX(Constants.RIGHT_FOLLOWER_ID_ONE);
+    private final WPI_TalonSRX talonRightFollowerTwo = new WPI_TalonSRX(Constants.RIGHT_FOLLOWER_ID_TWO);
     private final DifferentialDrive robotDrive = new DifferentialDrive(talonLeftLeader, talonRightLeader);
 
     private double speed;
     private double rotation;
 
     public DriveSubsystem() {
-        talonLeftFollower.follow(talonLeftLeader);
-        talonRightFollower.follow(talonRightLeader);
-        talonRightLeader.setInverted(true);
+        talonLeftFollowerOne.follow(talonLeftLeader);
+        talonLeftFollowerTwo.follow(talonLeftLeader);
+        talonRightFollowerOne.follow(talonRightLeader);
+        talonRightFollowerTwo.follow(talonRightLeader);
+        talonLeftLeader.setInverted(true);
+        talonLeftFollowerOne.setInverted(true);
+        talonLeftFollowerTwo.setInverted(true);
     }
 
     public void setDrive(double speed, double rotation) {
-        this.speed = speed;
-        this.rotation = rotation;
+        this.speed = speed / 2;
+        /*
+        if (speed < 0) {
+            this.speed = Math.max(-0.5, speed);
+        } else if (speed > 0) {
+            this.speed = Math.min(speed, 0.5);
+        }
+        */
+        this.rotation = rotation / 2;
     }
 
     @Override
     public void periodic() {
-        robotDrive.arcadeDrive(speed, rotation);
+        robotDrive.arcadeDrive(-speed, -rotation);
     }
 }
