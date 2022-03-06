@@ -40,16 +40,10 @@ public class RobotContainer {
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
     new JoystickButton(joystick, IOConstants.ROTATE_UP)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(1.0))
-      .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
+      .whenPressed(() -> climberCommand.rotateForward());
 
     new JoystickButton(joystick, IOConstants.ROTATE_DOWN)
-      .whenPressed(() -> climberCommand.setRotationalSpeed(-1.0))
-      .whenReleased(() -> climberCommand.setRotationalSpeed(0.0));
-
-    new JoystickButton(joystick, IOConstants.TRANSLATE_TOGGLE)
-      .whenPressed(() -> climberCommand.toggleTranslationalSpeed());
-
+      .whenPressed(() -> climberCommand.rotateBackward());
   }
 
   private void addDrive() {

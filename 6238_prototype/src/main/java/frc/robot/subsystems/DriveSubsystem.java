@@ -29,7 +29,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setDrive(double speed, double rotation) {
-        this.speed = speed / 2;
+        this.speed = 3 * speed / 4;
         /*
         if (speed < 0) {
             this.speed = Math.max(-0.5, speed);
@@ -37,7 +37,7 @@ public class DriveSubsystem extends SubsystemBase {
             this.speed = Math.min(speed, 0.5);
         }
         */
-        this.rotation = rotation / 2;
+        this.rotation = 3 * rotation / 4;
     }
 
     @Override
