@@ -39,6 +39,10 @@ public class RobotContainer {
       .whenPressed(() -> climberCommand.setTranslationSpeed(-1.0))
       .whenReleased(() -> climberCommand.setTranslationSpeed(0.0));
 
+    new JoystickButton(joystick, IOConstants.CLIMBER_AUTO_EXTEND)
+      .whenPressed(() -> climberCommand.startAutoExtend())
+      .whenReleased(() -> climberCommand.stopAutoExtend());
+
     new JoystickButton(joystick, IOConstants.ROTATE_UP)
       .whenPressed(() -> climberCommand.rotateForward());
 

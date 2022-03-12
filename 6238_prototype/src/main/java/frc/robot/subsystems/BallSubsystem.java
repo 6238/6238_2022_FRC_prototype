@@ -30,7 +30,7 @@ public class BallSubsystem extends SubsystemBase {
 
         lowerMotor = new CANSparkMax(Constants.BALL_LOWER_ID, MotorType.kBrushless);
 
-        doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+        doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
     }
 
     public void setSpeed(double lowerSpeed, double upperSpeed) {
@@ -57,11 +57,11 @@ public class BallSubsystem extends SubsystemBase {
         } else {
             doubleSolenoid.set(DoubleSolenoid.Value.kForward);
         }
-        upperMotor.set(-upperSpeed);
-        lowerMotor.set(lowerSpeed);     
+        upperMotor.set(upperSpeed);
+        lowerMotor.set(-lowerSpeed);     
     }
 
     public double getSpeedUpperMotor() {
-        return -upperMotorEncoder.getVelocity();
+        return upperMotorEncoder.getVelocity();
     }
 }
