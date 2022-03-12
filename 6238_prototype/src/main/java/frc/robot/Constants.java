@@ -13,8 +13,8 @@ public final class Constants {
     public final static int RIGHT_FOLLOWER_ID_TWO = 35;
 
     public final static int BALL_EXTEND_ID = 6;
-    public final static int BALL_LOWER_ID = 21;
-    public final static int BALL_UPPER_ID = 22;
+    public final static int BALL_LOWER_ID = 22;
+    public final static int BALL_UPPER_ID = 21;
 
     public final static int INTAKE_FRONT_LIMIT_SWITCH = 2;
     public final static int INTAKE_BACK_LIMIT_SWITCH = 3;

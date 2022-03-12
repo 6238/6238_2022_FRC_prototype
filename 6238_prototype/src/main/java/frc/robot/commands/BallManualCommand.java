@@ -29,6 +29,9 @@ public class BallManualCommand extends CommandBase {
         double upperUI2 = SmartDashboard.getNumber("upperShooterSpeed", 0);
         SmartDashboard.putNumber("upperShooterSpeed", upperUI2);
 
+        double upperUSST = SmartDashboard.getNumber("upperShooterSpeedThreshold", 0);
+        SmartDashboard.putNumber("upperShooterSpeedThreshold", upperUSST);
+
         this.ball = ball;
         addRequirements(ball);
     }
@@ -37,12 +40,18 @@ public class BallManualCommand extends CommandBase {
         //pull values from dashboard
         double bottomMotorSpeed = 0;
         double upperMotorSpeed = 0;
+        
+        double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
+        SmartDashboard.putNumber("upperMotorSpeedCurrent", upperMotorSpeedCurrent);
+        
         if(motorOn){
             if (mode == ModeStates.INTAKING) {
                 bottomMotorSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", 0);
                 upperMotorSpeed = SmartDashboard.getNumber("upperIntakeSpeed", 0);
             } else if (mode == ModeStates.SHOOTING) {
-                bottomMotorSpeed = SmartDashboard.getNumber("lowerShooterSpeed", 0);
+                if (upperMotorSpeedCurrent > SmartDashboard.getNumber("upperShooterSpeedThreshold", 0)) {
+                    bottomMotorSpeed = SmartDashboard.getNumber("lowerShooterSpeed", 0);
+                }        
                 upperMotorSpeed = SmartDashboard.getNumber("upperShooterSpeed", 0);
             }
         }
