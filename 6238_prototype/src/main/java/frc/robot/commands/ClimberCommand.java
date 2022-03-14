@@ -22,7 +22,6 @@ public class ClimberCommand extends CommandBase {
 
     public void execute() {
         if (autoExtendEnabled){
-            System.out.println("autoExtend");
             climberSubsystem.setTranslation(1);
             if (climberSubsystem.getTopLimitSwitch()) {
                 climberSubsystem.rotateForward();

@@ -27,7 +27,7 @@ public class ClimberSubsystem extends SubsystemBase {
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 2);
         translationalControllerLeft = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_LEFT, MotorType.kBrushless);
         translationalControllerRight = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_RIGHT, MotorType.kBrushless);
-        rate = 0;
+        rate = 8;
         filter = new SlewRateLimiter(rate);
     }
 
@@ -44,9 +44,12 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
    public void setSlewRate(double rate) {
-        if (this.rate != rate) {
-            System.out.println(rate);
-            this.rate = rate;
+        double limitedRate = Math.max(rate, 2);
+        if (limitedRate != rate) {
+            System.out.println("ClimberSubsystem slew rate limited actual:" + limitedRate + " requested:" +rate);
+        }
+        if (this.rate != limitedRate) {
+            this.rate = limitedRate;
             filter = new SlewRateLimiter(this.rate);
         }
     }
