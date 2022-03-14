@@ -37,7 +37,7 @@ public class DriveSubsystem extends SubsystemBase {
             this.speed = Math.min(speed, 0.5);
         }
         */
-        this.rotation = 3 * rotation / 4;
+        this.rotation = 2 * rotation / 4;
     }
 
     @Override

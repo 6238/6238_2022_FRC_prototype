@@ -3,6 +3,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.BallSubsystem;
 
 public class BallManualCommand extends CommandBase {
@@ -10,6 +11,12 @@ public class BallManualCommand extends CommandBase {
     private enum ModeStates {SHOOTING, INTAKING};
     private ModeStates mode;
     private boolean motorOn;
+
+    private final SmartDashboardParam lowerIntakeSpeed;
+    private final SmartDashboardParam upperIntakeSpeed;
+    private final SmartDashboardParam lowerShooterSpeed;
+    private final SmartDashboardParam upperShooterSpeed;
+    private final SmartDashboardParam upperShooterSpeedThreshold;
  
     public BallManualCommand(BallSubsystem ball) {
         //swtiches between referencing shooter or intake power value
@@ -17,20 +24,15 @@ public class BallManualCommand extends CommandBase {
         motorOn = false;
 
         //makes the dashboard
-        double lowerUI = SmartDashboard.getNumber("lowerIntakeSpeed", 0);
-        SmartDashboard.putNumber("lowerIntakeSpeed", lowerUI);
+        lowerIntakeSpeed = new SmartDashboardParam("lowerIntakeSpeed");
 
-        double upperUI = SmartDashboard.getNumber("upperIntakeSpeed", 0);
-        SmartDashboard.putNumber("upperIntakeSpeed", upperUI);
+        upperIntakeSpeed = new SmartDashboardParam("upperIntakeSpeed");
 
-        double lowerUI2 = SmartDashboard.getNumber("lowerShooterSpeed", 0);
-        SmartDashboard.putNumber("lowerShooterSpeed", lowerUI2);
+        lowerShooterSpeed = new SmartDashboardParam("lowerShooterSpeed");
 
-        double upperUI2 = SmartDashboard.getNumber("upperShooterSpeed", 0);
-        SmartDashboard.putNumber("upperShooterSpeed", upperUI2);
+        upperShooterSpeed = new SmartDashboardParam("upperShooterSpeed");
 
-        double upperUSST = SmartDashboard.getNumber("upperShooterSpeedThreshold", 0);
-        SmartDashboard.putNumber("upperShooterSpeedThreshold", upperUSST);
+        upperShooterSpeedThreshold = new SmartDashboardParam("upperShooterSpeedThreshold");
 
         this.ball = ball;
         addRequirements(ball);
@@ -46,13 +48,13 @@ public class BallManualCommand extends CommandBase {
         
         if(motorOn){
             if (mode == ModeStates.INTAKING) {
-                bottomMotorSpeed = SmartDashboard.getNumber("lowerIntakeSpeed", 0);
-                upperMotorSpeed = SmartDashboard.getNumber("upperIntakeSpeed", 0);
+                bottomMotorSpeed = lowerIntakeSpeed.get();
+                upperMotorSpeed = upperIntakeSpeed.get();
             } else if (mode == ModeStates.SHOOTING) {
-                if (upperMotorSpeedCurrent > SmartDashboard.getNumber("upperShooterSpeedThreshold", 0)) {
-                    bottomMotorSpeed = SmartDashboard.getNumber("lowerShooterSpeed", 0);
+                if (upperMotorSpeedCurrent > upperShooterSpeedThreshold.get()) {
+                    bottomMotorSpeed = lowerShooterSpeed.get();
                 }        
-                upperMotorSpeed = SmartDashboard.getNumber("upperShooterSpeed", 0);
+                upperMotorSpeed = upperShooterSpeed.get();
             }
         }
         ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
