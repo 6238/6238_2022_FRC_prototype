@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -17,7 +16,7 @@ public class ClimberCommand extends CommandBase {
         this.climberSubsystem = climber;
         addRequirements(climberSubsystem);
 
-        slewRate = new SmartDashboardParam("slewRate");
+        slewRate = new SmartDashboardParam("climberSlewRate");
     }
 
     public void execute() {

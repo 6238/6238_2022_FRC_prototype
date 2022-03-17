@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -15,6 +16,12 @@ public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonSRX talonRightFollowerTwo = new WPI_TalonSRX(Constants.RIGHT_FOLLOWER_ID_TWO);
     private final DifferentialDrive robotDrive = new DifferentialDrive(talonLeftLeader, talonRightLeader);
 
+    private SlewRateLimiter rotateSlewRateLimiter;
+    private SlewRateLimiter forwardSlewRateLimiter; 
+
+    private double rotateSlewRate;
+    private double forwardSlewRate;
+
     private double speed;
     private double rotation;
 
@@ -26,22 +33,38 @@ public class DriveSubsystem extends SubsystemBase {
         talonLeftLeader.setInverted(true);
         talonLeftFollowerOne.setInverted(true);
         talonLeftFollowerTwo.setInverted(true);
+
+        rotation = 0.0;
+        speed = 0.0;
+        rotateSlewRate = 0.0;
+        forwardSlewRate = 0.0;
+        rotateSlewRateLimiter = new SlewRateLimiter(rotateSlewRate);
+        forwardSlewRateLimiter = new SlewRateLimiter(forwardSlewRate);
     }
 
     public void setDrive(double speed, double rotation) {
-        this.speed = 3 * speed / 4;
-        /*
-        if (speed < 0) {
-            this.speed = Math.max(-0.5, speed);
-        } else if (speed > 0) {
-            this.speed = Math.min(speed, 0.5);
+        System.out.println("setDrive speed="+speed);
+        this.speed = speed;
+        this.rotation = rotation;
+    }
+
+    public void setSlewRate(double forwardSlewRate, double rotateSlewRate) {
+        System.out.println("forwardSlewRate: " + forwardSlewRate + ", rotateSlewRate: " + rotateSlewRate);
+        if (forwardSlewRate != this.forwardSlewRate) {
+            this.forwardSlewRate = forwardSlewRate;
+            forwardSlewRateLimiter = new SlewRateLimiter(this.forwardSlewRate);
         }
-        */
-        this.rotation = 2 * rotation / 4;
+        if (rotateSlewRate != this.rotateSlewRate) {
+            this.rotateSlewRate = rotateSlewRate;
+            rotateSlewRateLimiter = new SlewRateLimiter(this.rotateSlewRate);
+        }
     }
 
     @Override
     public void periodic() {
+//        robotDrive.arcadeDrive(-forwardSlewRateLimiter.calculate(speed),
+//            -rotateSlewRateLimiter.calculate(rotation));
+        System.out.println("Speed: " + speed + ", Rotation:" + rotation);
         robotDrive.arcadeDrive(-speed, -rotation);
     }
 }

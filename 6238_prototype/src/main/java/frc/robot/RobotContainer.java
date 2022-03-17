@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
+import frc.robot.commands.DriveAutonomousCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -79,10 +80,9 @@ public class RobotContainer {
     addDrive();
     addBall();
     addCamera();
-
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return new DriveAutonomousCommand(driveSubsystem);
   }
 }
