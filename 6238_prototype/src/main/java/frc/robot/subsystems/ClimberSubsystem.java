@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -16,7 +15,6 @@ public class ClimberSubsystem extends SubsystemBase {
     private final DigitalInput translationBottomLimit;
     private final DoubleSolenoid doubleSolenoid;
     private double translationalSpeed;
-    SlewRateLimiter filter;
 
     double rate;
     
@@ -27,8 +25,6 @@ public class ClimberSubsystem extends SubsystemBase {
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 2);
         translationalControllerLeft = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_LEFT, MotorType.kBrushless);
         translationalControllerRight = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_RIGHT, MotorType.kBrushless);
-        rate = 8;
-        filter = new SlewRateLimiter(rate);
     }
 
     public void rotateForward() {
@@ -43,21 +39,9 @@ public class ClimberSubsystem extends SubsystemBase {
         translationalSpeed =  speed;
     }
 
-   public void setSlewRate(double rate) {
-        double limitedRate = Math.max(rate, 2);
-        if (limitedRate != rate) {
-            System.out.println("ClimberSubsystem slew rate limited actual:" + limitedRate + " requested:" +rate);
-        }
-        if (this.rate != limitedRate) {
-            this.rate = limitedRate;
-            filter = new SlewRateLimiter(this.rate);
-        }
-    }
-
     @Override
     public void periodic() {
         double speed = translationalSpeed;
-        speed = filter.calculate(speed);
         if (translationTopLimit.get()) {
             speed = Math.min(speed, 0);
         } else if (translationBottomLimit.get()) {
