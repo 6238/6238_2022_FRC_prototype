@@ -40,7 +40,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void setTranslation(double speed) {
-        translationalSpeed = speed;
+        translationalSpeed =  speed;
     }
 
    public void setSlewRate(double rate) {
@@ -63,8 +63,8 @@ public class ClimberSubsystem extends SubsystemBase {
         } else if (translationBottomLimit.get()) {
             speed = Math.max(speed, 0);
         }
-        translationalControllerLeft.set(-speed);
-        translationalControllerRight.set(speed);
+        translationalControllerLeft.set(speed);
+        translationalControllerRight.set(-speed);
     }
 
 	public boolean getTopLimitSwitch() {
