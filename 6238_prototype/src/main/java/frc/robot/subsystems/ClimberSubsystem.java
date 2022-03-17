@@ -22,7 +22,7 @@ public class ClimberSubsystem extends SubsystemBase {
         translationalSpeed = 0.0;
         translationTopLimit = new DigitalInput(1);
         translationBottomLimit = new DigitalInput(0);
-        doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 2);
+        doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 2);
         translationalControllerLeft = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_LEFT, MotorType.kBrushless);
         translationalControllerRight = new CANSparkMax(Constants.CLIMBER_TRANSLATION_ID_RIGHT, MotorType.kBrushless);
     }

@@ -29,8 +29,8 @@ public class BallSubsystem extends SubsystemBase {
         upperMotorEncoder = upperMotor.getEncoder();
 
         lowerMotor = new CANSparkMax(Constants.BALL_LOWER_ID, MotorType.kBrushless);
-
-        doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
+// yellow zipties are intake
+        doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 1);
     }
 
     public void setSpeed(double lowerSpeed, double upperSpeed) {
