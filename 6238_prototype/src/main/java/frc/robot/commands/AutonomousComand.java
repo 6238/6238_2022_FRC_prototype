@@ -23,7 +23,6 @@ public class AutonomousComand extends CommandBase {
     @Override
     public void initialize() {
         startTime = System.currentTimeMillis();
-        
     }
     @Override
     public void execute() {

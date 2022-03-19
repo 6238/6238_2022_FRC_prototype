@@ -48,8 +48,11 @@ public class BallManualCommand extends CommandBase {
         
         if(motorOn){
             if (mode == ModeStates.INTAKING) {
-                bottomMotorSpeed = lowerIntakeSpeed.get();
-                upperMotorSpeed = upperIntakeSpeed.get();
+                //bottomMotorSpeed = lowerIntakeSpeed.get();
+                //upperMotorSpeed = upperIntakeSpeed.get();
+                bottomMotorSpeed = .8;
+                upperMotorSpeed = 0;
+            
             } else if (mode == ModeStates.SHOOTING) {
                 if (upperMotorSpeedCurrent > 4700) {//upperShooterSpeedThreshold.get())
                     bottomMotorSpeed = 1;
