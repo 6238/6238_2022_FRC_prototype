@@ -27,7 +27,7 @@ public class AutonomousComand extends CommandBase {
     @Override
     public void execute() {
         long timeElapsed = System.currentTimeMillis() - startTime;
-        if (timeElapsed < 5000 ){
+        if (2000 < timeElapsed && timeElapsed < 7000 ){
             drive.setDrive(0,0);
             double bottomMotorSpeed = 0;
             double upperMotorSpeed = .8;
