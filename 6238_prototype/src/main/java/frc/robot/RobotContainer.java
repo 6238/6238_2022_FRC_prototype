@@ -49,6 +49,9 @@ public class RobotContainer {
 
     new JoystickButton(joystick, IOConstants.ROTATE_DOWN)
       .whenPressed(() -> climberCommand.rotateBackward());
+
+    new JoystickButton(joystick, IOConstants.CLIMBER_LIMIT_TOGGLE)
+      .whenPressed(() -> climberSubsystem.toggleLimitSwitchEnabled());
   }
 
   private void addDrive() {

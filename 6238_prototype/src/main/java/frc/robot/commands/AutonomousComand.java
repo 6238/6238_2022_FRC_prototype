@@ -30,10 +30,10 @@ public class AutonomousComand extends CommandBase {
         if (timeElapsed < 5000 ){
             drive.setDrive(0,0);
             double bottomMotorSpeed = 0;
-            double upperMotorSpeed = .9;
+            double upperMotorSpeed = .8;
             double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
 
-            if (upperMotorSpeedCurrent > 4700) {//upperShooterSpeedThreshold.get())
+            if (upperMotorSpeedCurrent > 4500) {//upperShooterSpeedThreshold.get())
                 bottomMotorSpeed = 1;
             }        
             ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
