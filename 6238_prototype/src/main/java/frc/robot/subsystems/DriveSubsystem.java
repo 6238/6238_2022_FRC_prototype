@@ -42,6 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+       // System.out.println("driveSubsystem " + speed);
         robotDrive.arcadeDrive(-speed, -rotation);
     }
 }

@@ -9,6 +9,7 @@ import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.AutonomousComand;
 import frc.robot.commands.BallManualCommand;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.CameraSubsystem;
@@ -83,6 +84,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
-  }
+    return new AutonomousComand(driveSubsystem, ballSubsystem);
+   }
 }
