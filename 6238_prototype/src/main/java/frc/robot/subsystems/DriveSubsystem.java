@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants;
@@ -29,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setDrive(double speed, double rotation) {
-        this.speed = 3 * speed / 4;
+        this.speed = 0.8 * speed;
         /*
         if (speed < 0) {
             this.speed = Math.max(-0.5, speed);
@@ -44,5 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
        // System.out.println("driveSubsystem " + speed);
         robotDrive.arcadeDrive(-speed, -rotation);
+        SmartDashboard.putNumber("DriveSpeed", speed);
+        SmartDashboard.putNumber("DriveRotation", rotation);
     }
 }

@@ -1,24 +1,62 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
     private final DriveSubsystem drive;
     private Joystick joystick;
+    private final double maximumDecceleration;
+    // Positive Value
+    private final double maximumAcceleration;
+    // Positive Value
+
+    private double previousSpeed;
 
     public DriveCommand(DriveSubsystem drive, Joystick joystick) {
         this.drive = drive;
         this.joystick = joystick;
         addRequirements(drive);
+        previousSpeed = 0;
+        maximumDecceleration = 0.02;
+        maximumAcceleration = 0.02;
     }
 
     public void execute() {
-        double speed = Math.abs(joystick.getY()) * joystick.getY();
+        double inputSpeed = joystick.getY();
+        SmartDashboard.putNumber("DriveInput", inputSpeed);
+
+        double speed = Math.abs(inputSpeed) * inputSpeed;
         speed *= Math.abs(speed) < 0.01 ? 0 : 1;
+        if (Math.abs(speed) < 0.9) {
+            if (speed > 0) {
+                if (speed > previousSpeed && Math.abs(speed - previousSpeed) > maximumAcceleration) {
+                    speed = previousSpeed + maximumAcceleration;
+                } else if (speed < previousSpeed && Math.abs(previousSpeed - speed) > maximumDecceleration){
+                    speed = previousSpeed - maximumDecceleration;
+                }
+            } else {
+                if (speed > previousSpeed && Math.abs(speed - previousSpeed) > maximumDecceleration) {
+                    speed = previousSpeed + maximumDecceleration;
+                } else if (speed < previousSpeed && Math.abs(previousSpeed - speed) > maximumAcceleration) {
+                    speed = previousSpeed - maximumAcceleration;
+                }
+            }
+        }
+        previousSpeed = speed;
+        if (speed > .05){
+            speed = speed * .65 + .35;
+        } else if (speed < -.05) {
+            speed = speed * .65 - .35;
+        } else {
+            speed = 0;
+        }
+
         double rotation = joystick.getX();
         rotation *= Math.abs(rotation) < 0.05 ? 0 : 1; 
+
         drive.setDrive(speed, rotation);
     }
 
