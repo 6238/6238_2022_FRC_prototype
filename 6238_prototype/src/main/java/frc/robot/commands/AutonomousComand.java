@@ -33,7 +33,7 @@ public class AutonomousComand extends CommandBase {
             double upperMotorSpeed = .88;
             double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
 
-            if (upperMotorSpeedCurrent > 4300) {//upperShooterSpeedThreshold.get())
+            if (upperMotorSpeedCurrent > 4200) {//upperShooterSpeedThreshold.get())
                 bottomMotorSpeed = 1;
             }        
             ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);

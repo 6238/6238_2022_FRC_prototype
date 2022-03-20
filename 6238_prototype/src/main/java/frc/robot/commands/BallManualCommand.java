@@ -54,7 +54,7 @@ public class BallManualCommand extends CommandBase {
                 upperMotorSpeed = 0;
             
             } else if (mode == ModeStates.SHOOTING) {
-                if (upperMotorSpeedCurrent > 4300) {
+                if (upperMotorSpeedCurrent > 4200) {
                     bottomMotorSpeed = 1;
                 }        
                 upperMotorSpeed = .88;
