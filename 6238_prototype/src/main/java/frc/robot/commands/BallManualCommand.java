@@ -55,9 +55,9 @@ public class BallManualCommand extends CommandBase {
             
             } else if (mode == ModeStates.SHOOTING) {
                 if (upperMotorSpeedCurrent > 4200) {
-                    bottomMotorSpeed = 1;
+                    //bottomMotorSpeed = 1;
                 }        
-                upperMotorSpeed = .88;
+                upperMotorSpeed = -upperShooterSpeed.get();
             }
         }
         ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
