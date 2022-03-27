@@ -77,7 +77,7 @@ public class RobotContainer {
 
     new JoystickButton(joystick, IOConstants.START_INTAKE)
       .whenPressed(() -> ballManualCommand.startIntake())
-      .whenReleased(() -> ballManualCommand.motorOff());
+      .whenReleased(() -> ballManualCommand.stopIntake());
   
     new JoystickButton(joystick, IOConstants.START_SHOOTER)
       .whenPressed(() -> ballManualCommand.startShooter())

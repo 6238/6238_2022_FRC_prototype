@@ -11,12 +11,16 @@ public class BallManualCommand extends CommandBase {
     private enum ModeStates {SHOOTING, INTAKING};
     private ModeStates mode;
     private boolean motorOn;
+    
+    private double intakeRetractedTime;
 
     private final SmartDashboardParam lowerIntakeSpeed;
     private final SmartDashboardParam upperIntakeSpeed;
     private final SmartDashboardParam lowerShooterSpeed;
     private final SmartDashboardParam upperShooterSpeed;
     private final SmartDashboardParam upperShooterSpeedThreshold;
+
+    private final double bottomMotorIntakeSpeed;
  
     public BallManualCommand(BallSubsystem ball) {
         //swtiches between referencing shooter or intake power value
@@ -36,6 +40,8 @@ public class BallManualCommand extends CommandBase {
 
         this.ball = ball;
         addRequirements(ball);
+        intakeRetractedTime = 0;
+        bottomMotorIntakeSpeed = 0.8;
     }
 
     public void execute() {
@@ -45,19 +51,20 @@ public class BallManualCommand extends CommandBase {
         
         double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
         SmartDashboard.putNumber("upperMotorSpeedCurrent", upperMotorSpeedCurrent);
-        
+
+        if  (System.currentTimeMillis() - intakeRetractedTime < 2000) {
+            bottomMotorSpeed = bottomMotorIntakeSpeed;
+        }
+
         if(motorOn){
             if (mode == ModeStates.INTAKING) {
                 //bottomMotorSpeed = lowerIntakeSpeed.get();
                 //upperMotorSpeed = upperIntakeSpeed.get();
-                bottomMotorSpeed = .8;
-                upperMotorSpeed = 0;
+                bottomMotorSpeed = bottomMotorIntakeSpeed;
+                upperMotorSpeed = -0.1;
             
             } else if (mode == ModeStates.SHOOTING) {
-                if (upperMotorSpeedCurrent > 4200) {
-                    //bottomMotorSpeed = 1;
-                }        
-                upperMotorSpeed = -upperShooterSpeed.get();
+                upperMotorSpeed = upperShooterSpeed.get();
             }
         }
         ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
@@ -78,6 +85,12 @@ public class BallManualCommand extends CommandBase {
     public void motorOff() {
         motorOn = false;
         ball.retract();
+    }
+
+    public void stopIntake() {
+        motorOn = false;
+        ball.retract();
+        intakeRetractedTime = System.currentTimeMillis();
     }
 
 
