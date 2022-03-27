@@ -52,7 +52,17 @@ public class RobotContainer {
 
     new JoystickButton(joystick, IOConstants.CLIMBER_LIMIT_TOGGLE)
       .whenPressed(() -> climberSubsystem.toggleLimitSwitchEnabled());
+
+      new JoystickButton(joystick, IOConstants.RIGHT_KICKER)
+      .whenPressed(() -> BallSubsystem.activateRightKicker(true)).whenReleased(() -> BallSubsystem.activateRightKicker(false));
+
+      new JoystickButton(joystick, IOConstants.LEFT_KICKER)
+      .whenPressed(() -> BallSubsystem.activateLeftKicker(true)).whenReleased(() -> BallSubsystem.activateLeftKicker(false));
+ 
   }
+
+
+
 
   private void addDrive() {
     driveSubsystem = new DriveSubsystem();

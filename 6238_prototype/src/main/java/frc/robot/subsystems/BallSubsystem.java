@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -13,9 +14,9 @@ import frc.robot.Constants;
 public class BallSubsystem extends SubsystemBase {
     private final CANSparkMax upperMotor;
     private final CANSparkMax lowerMotor;
-
     private final DoubleSolenoid doubleSolenoid;
-
+    private static Solenoid leftKicker; 
+    private static Solenoid rightKicker; 
     private double upperSpeed;
     private double lowerSpeed;
     private boolean isExtended;
@@ -31,6 +32,16 @@ public class BallSubsystem extends SubsystemBase {
         lowerMotor = new CANSparkMax(Constants.BALL_LOWER_ID, MotorType.kBrushless);
 // yellow zipties are intake
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 1);
+        leftKicker = new Solenoid(PneumaticsModuleType.CTREPCM, 6);
+        rightKicker = new Solenoid(PneumaticsModuleType.CTREPCM, 7);
+    }
+
+    public static void activateLeftKicker(boolean activate){
+        leftKicker.set (activate);
+    }
+    
+    public static void activateRightKicker(boolean activate){
+        rightKicker.set (activate);
     }
 
     public void setSpeed(double lowerSpeed, double upperSpeed) {
@@ -58,7 +69,9 @@ public class BallSubsystem extends SubsystemBase {
             doubleSolenoid.set(DoubleSolenoid.Value.kForward);
         }
         upperMotor.set(upperSpeed);
-        lowerMotor.set(-lowerSpeed);     
+        lowerMotor.set(-lowerSpeed); 
+        
+        
     }
 
     public double getSpeedUpperMotor() {
