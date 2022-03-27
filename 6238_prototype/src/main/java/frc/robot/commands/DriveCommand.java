@@ -3,15 +3,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
     private final DriveSubsystem drive;
     private Joystick joystick;
-    private final double maximumDecceleration;
+    private double maximumDecceleration;
     // Positive Value
-    private final double maximumAcceleration;
+    private double maximumAcceleration;
     // Positive Value
+
+    private final SmartDashboardParam accelerationSlewRate = new SmartDashboardParam("accelerationSlewRate");
+    private final SmartDashboardParam deccelerationSlewRate = new SmartDashboardParam("deccelerationSlewRate");
 
     private double previousSpeed;
 
@@ -20,17 +24,21 @@ public class DriveCommand extends CommandBase {
         this.joystick = joystick;
         addRequirements(drive);
         previousSpeed = 0;
-        maximumDecceleration = 0.02;
-        maximumAcceleration = 0.02;
+        maximumDecceleration = deccelerationSlewRate.get(); // 0.03
+        maximumAcceleration = accelerationSlewRate.get(); // 0.04
     }
 
     public void execute() {
+        // temp
+        maximumDecceleration = deccelerationSlewRate.get();
+        maximumAcceleration = accelerationSlewRate.get();
+
         double inputSpeed = joystick.getY();
-        SmartDashboard.putNumber("DriveInput", inputSpeed);
+        SmartDashboard.putNumber("DriveInput", -inputSpeed);
 
         double speed = Math.abs(inputSpeed) * inputSpeed;
         speed *= Math.abs(speed) < 0.01 ? 0 : 1;
-        if (Math.abs(speed) < 0.9) {
+        if (Math.abs(speed) < 2) {
             if (speed > 0) {
                 if (speed > previousSpeed && Math.abs(speed - previousSpeed) > maximumAcceleration) {
                     speed = previousSpeed + maximumAcceleration;
