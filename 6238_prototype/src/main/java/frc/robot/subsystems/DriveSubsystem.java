@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import frc.robot.Constants;
+import frc.robot.SmartDashboardParam;
 
 public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonFX talonLeftLeader = new WPI_TalonFX(Constants.LEFT_LEADER_ID);
@@ -19,11 +21,16 @@ public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonFX talonRightFollowerTwo = new WPI_TalonFX(Constants.RIGHT_FOLLOWER_ID_TWO);
     private final DifferentialDrive robotDrive = new DifferentialDrive(talonLeftLeader, talonRightLeader);
 
+    private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter"); // 0.18
+
     private double speed;
     private double rotation;
-    private final int PID_ID = 0;
+    private final int PID_ID;
+    boolean isBraking;
 
     public DriveSubsystem() {
+        PID_ID = 0;
+        isBraking = true;
         talonLeftFollowerOne.follow(talonLeftLeader);
         talonLeftFollowerTwo.follow(talonLeftLeader);
         talonRightFollowerOne.follow(talonRightLeader);
@@ -41,6 +48,13 @@ public class DriveSubsystem extends SubsystemBase {
 
         talonLeftLeader.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, PID_ID, 0);
         talonRightLeader.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, PID_ID, 0);
+
+        talonLeftLeader.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+        talonLeftFollowerOne.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+        talonLeftFollowerTwo.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+        talonRightLeader.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+        talonRightFollowerOne.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+        talonRightFollowerTwo.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
     }
 
     public void setDrive(double speed, double rotation) {
@@ -50,6 +64,24 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        boolean isBraking = Math.abs(speed) < 0.01 && Math.abs(rotation) < 0.01;  
+        if (isBraking && !this.isBraking) {
+            this.isBraking = true;
+            talonLeftLeader.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+            talonLeftFollowerOne.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+            talonLeftFollowerTwo.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+            talonRightLeader.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+            talonRightFollowerOne.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+            talonRightFollowerTwo.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, currentLimit.get(), 0, 0));
+        }  else if (!isBraking && this.isBraking) {
+            this.isBraking = false;
+            talonLeftLeader.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, currentLimit.get(), 0, 0));
+            talonLeftFollowerOne.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, currentLimit.get(), 0, 0));
+            talonLeftFollowerTwo.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, currentLimit.get(), 0, 0));
+            talonRightLeader.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, currentLimit.get(), 0, 0));
+            talonRightFollowerOne.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, currentLimit.get(), 0, 0));
+            talonRightFollowerTwo.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, currentLimit.get(), 0, 0));
+        }
         robotDrive.arcadeDrive(-speed, -rotation);
         SmartDashboard.putNumber("DriveSpeed", -speed);
         SmartDashboard.putNumber("DriveRotation", rotation);
