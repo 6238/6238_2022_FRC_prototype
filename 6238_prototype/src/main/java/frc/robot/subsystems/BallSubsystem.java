@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj.Solenoid;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
+import frc.robot.SmartDashboardParam;
 
 public class BallSubsystem extends SubsystemBase {
     private final CANSparkMax upperMotor;
@@ -20,23 +22,49 @@ public class BallSubsystem extends SubsystemBase {
     private final DoubleSolenoid doubleSolenoid;
     private static Solenoid leftKicker; 
     private static Solenoid rightKicker; 
-    private double upperSpeed;
+    private double upperMotorRPMTarget;
     private double lowerSpeed;
     private boolean isExtended;
     private RelativeEncoder upperMotorEncoder;
 
+    SmartDashboardParam shooterPGainSlider = new SmartDashboardParam("shooterPGain");
+    SmartDashboardParam shooterIGainSlider = new SmartDashboardParam("shooterIGain");
+    SmartDashboardParam shooterDGainSlider = new SmartDashboardParam("shooterDGain");
+    SmartDashboardParam shooterFFGainSlider = new SmartDashboardParam("shooterFFGain");
+
+    double kP;
+    double kI;
+    double kD;
+    double kFF;
+
+    private SparkMaxPIDController pidController;
+
     public BallSubsystem() {
-        upperSpeed = 0.0;
+        upperMotorRPMTarget = 0.0;
         lowerSpeed = 0.0;
         isExtended = false;
         upperMotor = new CANSparkMax(Constants.BALL_UPPER_ID, MotorType.kBrushless);
         upperMotorEncoder = upperMotor.getEncoder();
+        upperMotor.setIdleMode(IdleMode.kCoast);
 
         lowerMotor = new CANSparkMax(Constants.BALL_LOWER_ID, MotorType.kBrushless);
 // yellow zipties are intake
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 1);
         leftKicker = new Solenoid(PneumaticsModuleType.CTREPCM, 6);
         rightKicker = new Solenoid(PneumaticsModuleType.CTREPCM, 7);
+
+        pidController = upperMotor.getPIDController();
+
+        kP = shooterPGainSlider.get();
+        kI = shooterIGainSlider.get();
+        kD = shooterDGainSlider.get();
+        kFF = shooterFFGainSlider.get();
+        pidController.setP(kP); // 0.00018  |  0.0001 | 0.00001
+        pidController.setI(kI); // 0.00000001  |  0.0000009 | 0.00000042
+        pidController.setD(kD); // 0 | 0.01 |  0
+        pidController.setIZone(0);
+        pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058
+        pidController.setOutputRange(-1, 1);
     }
 
     public static void activateLeftKicker(boolean activate){
@@ -47,8 +75,8 @@ public class BallSubsystem extends SubsystemBase {
         rightKicker.set (activate);
     }
 
-    public void setSpeed(double lowerSpeed, double upperSpeed) {
-        this.upperSpeed = upperSpeed;
+    public void setSpeed(double lowerSpeed, double upperSpeedTarget) {
+        this.upperMotorRPMTarget = upperSpeedTarget;
         this.lowerSpeed = lowerSpeed;
     }
     
@@ -66,16 +94,33 @@ public class BallSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (kP != shooterPGainSlider.get()) {
+            kP = shooterPGainSlider.get();
+            pidController.setP(kP);
+        }
+        if (kI != shooterIGainSlider.get()) {
+            kI = shooterIGainSlider.get();
+            pidController.setI(kI);
+        }
+        if (kD != shooterDGainSlider.get()) {
+            kD = shooterDGainSlider.get();
+            pidController.setD(kD);
+        }
+        if (kFF != shooterFFGainSlider.get()) {
+            kFF = shooterFFGainSlider.get();
+            pidController.setFF(kFF);
+        }
+
         if (isExtended) {
             doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
         } else {
             doubleSolenoid.set(DoubleSolenoid.Value.kForward);
         }
-        upperMotor.set(-upperSpeed);
-        lowerMotor.set(-lowerSpeed); 
+        pidController.setReference(-upperMotorRPMTarget, CANSparkMax.ControlType.kVelocity);
+        lowerMotor.set(-lowerSpeed);
     }
 
     public double getSpeedUpperMotor() {
-        return upperMotorEncoder.getVelocity();
+        return -upperMotorEncoder.getVelocity();
     }
 }

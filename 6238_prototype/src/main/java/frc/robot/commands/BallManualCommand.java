@@ -48,9 +48,6 @@ public class BallManualCommand extends CommandBase {
         //pull values from dashboard
         double bottomMotorSpeed = 0;
         double upperMotorSpeed = 0;
-        
-        double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
-        SmartDashboard.putNumber("upperMotorSpeedCurrent", upperMotorSpeedCurrent);
 
         if  (System.currentTimeMillis() - intakeRetractedTime < 2000) {
             bottomMotorSpeed = bottomMotorIntakeSpeed;
@@ -67,10 +64,15 @@ public class BallManualCommand extends CommandBase {
                 upperMotorSpeed = upperShooterSpeed.get();
             }
         }
+        double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
+        SmartDashboard.putNumber("upperMotorSpeedCurrent", upperMotorSpeedCurrent);
+        SmartDashboard.putNumber("upperMotorSpeedTarget", upperMotorSpeed);
+        SmartDashboard.putNumber("upperMotorSpeedError", upperMotorSpeed - upperMotorSpeedCurrent);
+        
         ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
 
     }
-
+    // 4300 RPM, 8.5 feet
     public void startShooter() {
         mode = ModeStates.SHOOTING;
         motorOn = true;
