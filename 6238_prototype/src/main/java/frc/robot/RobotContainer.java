@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.Intake.RetractIntakeCommand;
+import frc.robot.commands.Intake.RunIntakeCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.AutonomousComand;
 import frc.robot.commands.BallManualCommand;
@@ -54,9 +57,6 @@ public class RobotContainer {
       .whenPressed(() -> climberSubsystem.toggleLimitSwitchEnabled()); 
   }
 
-
-
-
   private void addDrive() {
     driveSubsystem = new DriveSubsystem();
     driveCommand = new DriveCommand(driveSubsystem, joystick);
@@ -69,12 +69,11 @@ public class RobotContainer {
     ballSubsystem.setDefaultCommand(ballManualCommand);
 
     new JoystickButton(joystick, IOConstants.START_INTAKE)
-      .whenPressed(() -> ballManualCommand.startIntake())
-      .whenReleased(() -> ballManualCommand.stopIntake());
-  
+      .whenPressed(new RunIntakeCommand(ballSubsystem))
+      .whenReleased(new RetractIntakeCommand(ballSubsystem));
+
     new JoystickButton(joystick, IOConstants.START_SHOOTER)
-      .whenPressed(() -> ballManualCommand.startShooter())
-      .whenReleased(() -> ballManualCommand.motorOff());
+      .whenPressed(new ShooterCommand(ballSubsystem));
 
     new JoystickButton(joystick, IOConstants.RIGHT_KICKER)
       .whenPressed(() -> BallSubsystem.activateRightKicker(true)).whenReleased(() -> BallSubsystem.activateRightKicker(false));
