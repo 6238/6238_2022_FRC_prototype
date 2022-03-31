@@ -11,6 +11,7 @@ public class RunIntakeCommand extends CommandBase{
         addRequirements(ball);
     }
 
+    @Override
     public void execute() {
         ball.extend();
         ball.setSpeed(BallTunedConstants.INTAKE_MODE_LOWER_MOTOR_SPEED,

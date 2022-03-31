@@ -9,6 +9,7 @@ import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.StopShooterCommand;
 import frc.robot.commands.Intake.RetractIntakeCommand;
 import frc.robot.commands.Intake.RunIntakeCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -69,7 +70,8 @@ public class RobotContainer {
                 .whenReleased(new RetractIntakeCommand(ballSubsystem));
 
         new JoystickButton(joystick, IOConstants.START_SHOOTER)
-                .whenPressed(new ShooterCommand(ballSubsystem));
+                .whenPressed(new ShooterCommand(ballSubsystem))
+                .whenReleased(new StopShooterCommand(ballSubsystem));
 
         new JoystickButton(joystick, IOConstants.RIGHT_KICKER)
                 .whenPressed(() -> BallSubsystem.activateRightKicker(true))

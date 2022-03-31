@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.BallSubsystem;
@@ -14,12 +13,14 @@ public class ShooterCommand extends CommandBase{
         addRequirements(ball);
     }
 
+    @Override
     public void execute() {
         ball.retract();
         ball.setSpeed(0.0, upperShooterSpeedTarget.get());
     }
 
-    public void end() {
+    @Override
+    public void end(boolean interrupted) {
         ball.setSpeed(0, 0);
     }
 }

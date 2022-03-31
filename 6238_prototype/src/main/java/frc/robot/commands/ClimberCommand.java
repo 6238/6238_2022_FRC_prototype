@@ -16,6 +16,7 @@ public class ClimberCommand extends CommandBase {
 
     }
 
+    @Override
     public void execute() {
         if (autoExtendEnabled){
             climberSubsystem.setTranslation(1);
@@ -24,7 +25,6 @@ public class ClimberCommand extends CommandBase {
             } else {
                 climberSubsystem.rotateBackward();
             }
-
         } else {
             climberSubsystem.setTranslation(translationSpeed);
         }
@@ -54,8 +54,6 @@ public class ClimberCommand extends CommandBase {
     public void startAutoExtend() {
         autoExtendEnabled = true;
     }
-
-
 }
 
 

@@ -21,6 +21,7 @@ public class AutonomousComand extends CommandBase {
         ball.setSpeed (0,0);
         addRequirements(drive, ball);
     }
+    
     @Override
     public void initialize() {
         startTime = System.currentTimeMillis();
@@ -44,7 +45,6 @@ public class AutonomousComand extends CommandBase {
             ball.setSpeed(0,0);
 
         }
-        
     }
     
     @Override
