@@ -1,25 +1,30 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.BallTunedConstants;
 import frc.robot.subsystems.BallSubsystem;
 
 public class RetractIntakeCommand extends CommandBase{
     private final long timeLimit;
-    BallSubsystem ball;
-    long startTime;
+    private final BallSubsystem ball;
+    private final long startTime;
     public RetractIntakeCommand(BallSubsystem ball) {
         this.ball = ball;
-        addRequirements(ball);
         timeLimit = 2000;
         startTime = System.currentTimeMillis();
+        addRequirements(ball);
     }
 
     @Override
     public void execute() {
         ball.retract();
-        double bottomMotorSpeed = 0.8;
-        double upperMotorSpeed = -0.1;
-        ball.setSpeed(bottomMotorSpeed, upperMotorSpeed);
+        ball.setSpeed(BallTunedConstants.INTAKE_MODE_LOWER_MOTOR_SPEED,
+            BallTunedConstants.INTAKE_MODE_UPPER_MOTOR_RPM);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        ball.setSpeed(0, 0);
     }
 
     @Override

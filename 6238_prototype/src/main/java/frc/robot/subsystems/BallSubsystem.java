@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -65,6 +65,10 @@ public class BallSubsystem extends SubsystemBase {
         pidController.setIZone(0);
         pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058
         pidController.setOutputRange(-1, 1);
+
+        SmartDashboard.putNumber("upperMotorRPMCurrent", getRPMUpperMotor());
+        SmartDashboard.putNumber("upperMotorRPMTarget", upperMotorRPMTarget);
+        SmartDashboard.putNumber("upperMotorSpeedError", upperMotorRPMTarget - getRPMUpperMotor());
     }
 
     public static void activateLeftKicker(boolean activate){
@@ -75,8 +79,8 @@ public class BallSubsystem extends SubsystemBase {
         rightKicker.set (activate);
     }
 
-    public void setSpeed(double lowerSpeed, double upperSpeedTarget) {
-        this.upperMotorRPMTarget = upperSpeedTarget;
+    public void setSpeed(double lowerSpeed, double upperMotorRPMTarget) {
+        this.upperMotorRPMTarget = upperMotorRPMTarget;
         this.lowerSpeed = lowerSpeed;
     }
     
@@ -120,7 +124,7 @@ public class BallSubsystem extends SubsystemBase {
         lowerMotor.set(-lowerSpeed);
     }
 
-    public double getSpeedUpperMotor() {
+    public double getRPMUpperMotor() {
         return -upperMotorEncoder.getVelocity();
     }
 }

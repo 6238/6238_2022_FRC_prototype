@@ -10,21 +10,16 @@ public class ShooterCommand extends CommandBase{
     private final SmartDashboardParam upperShooterSpeedTarget;
     public ShooterCommand(BallSubsystem ball) {
         this.ball = ball;
-        addRequirements(ball);
         upperShooterSpeedTarget = new SmartDashboardParam("upperMotorSpeedTarget");
+        addRequirements(ball);
     }
 
     public void execute() {
-        ball.extend();
-        double upperMotorSpeedTarget = upperShooterSpeedTarget.get();
-        double upperMotorSpeedCurrent = ball.getSpeedUpperMotor();
-        SmartDashboard.putNumber("upperMotorSpeedCurrent", upperMotorSpeedCurrent);
-        SmartDashboard.putNumber("upperMotorSpeedTarget", upperMotorSpeedTarget);
-        SmartDashboard.putNumber("upperMotorSpeedError",
-            upperMotorSpeedTarget - upperMotorSpeedCurrent);
+        ball.retract();
+        ball.setSpeed(0.0, upperShooterSpeedTarget.get());
     }
 
     public void end() {
-        ball.retract();
+        ball.setSpeed(0, 0);
     }
 }
