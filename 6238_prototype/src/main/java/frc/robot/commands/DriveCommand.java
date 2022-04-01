@@ -64,9 +64,21 @@ public class DriveCommand extends CommandBase {
         }
 
         double rotation = joystick.getX();
-        rotation *= Math.abs(rotation) < 0.05 ? 0 : 1; 
-
-        drive.setDrive(speed, rotation);
+        //rotation *= Math.abs(rotation) < 0.05 ? 0 : 1; 
+        SmartDashboard.putNumber("DriveInputy", -rotation);
+        
+        double speedRot = Math.abs(rotation) * rotation;
+        speedRot *= Math.abs(speedRot) < 0.05 ? 0 : 1;
+       
+        if (speedRot > .05){
+            speedRot = speedRot * .65 + .25;
+        } else if (speedRot < -.05) {
+            speedRot = speedRot * .65 - .25;
+        } else {
+            speedRot = 0;
+        }
+       
+       drive.setDrive(speed, rotation);
     }
 
     @Override
