@@ -66,9 +66,7 @@ public class BallSubsystem extends SubsystemBase {
         pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058
         pidController.setOutputRange(-1, 1);
 
-        SmartDashboard.putNumber("upperMotorRPMCurrent", getRPMUpperMotor());
-        SmartDashboard.putNumber("upperMotorRPMTarget", upperMotorRPMTarget);
-        SmartDashboard.putNumber("upperMotorSpeedError", upperMotorRPMTarget - getRPMUpperMotor());
+       
     }
 
     public static void activateLeftKicker(boolean activate){
@@ -122,6 +120,11 @@ public class BallSubsystem extends SubsystemBase {
         }
         pidController.setReference(-upperMotorRPMTarget, CANSparkMax.ControlType.kVelocity);
         lowerMotor.set(-lowerSpeed);
+       
+        SmartDashboard.putNumber("upperMotorRPMCurrent", getRPMUpperMotor());
+        SmartDashboard.putNumber("upperMotorRPMTarget", upperMotorRPMTarget);
+        SmartDashboard.putNumber("upperMotorSpeedError", upperMotorRPMTarget - getRPMUpperMotor());
+        SmartDashboard.putNumber("lowerMotorSpeed", lowerSpeed);
     }
 
     public double getRPMUpperMotor() {
