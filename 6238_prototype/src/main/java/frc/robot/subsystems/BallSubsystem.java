@@ -43,9 +43,11 @@ public class BallSubsystem extends SubsystemBase {
         upperMotorRPMTarget = 0.0;
         lowerSpeed = 0.0;
         isExtended = false;
+        
         upperMotor = new CANSparkMax(Constants.BALL_UPPER_ID, MotorType.kBrushless);
         upperMotorEncoder = upperMotor.getEncoder();
-        upperMotor.setIdleMode(IdleMode.kCoast);
+        upperMotor.setIdleMode(IdleMode.kBrake);
+        upperMotor.enableVoltageCompensation(11);
 
         lowerMotor = new CANSparkMax(Constants.BALL_LOWER_ID, MotorType.kBrushless);
 // yellow zipties are intake
@@ -59,11 +61,11 @@ public class BallSubsystem extends SubsystemBase {
         kI = shooterIGainSlider.get();
         kD = shooterDGainSlider.get();
         kFF = shooterFFGainSlider.get();
-        pidController.setP(kP); // 0.00018  |  0.0001 | 0.00001
-        pidController.setI(kI); // 0.00000001  |  0.0000009 | 0.00000042
-        pidController.setD(kD); // 0 | 0.01 |  0
+        pidController.setP(kP); // 0.00018  |  0.0001 | 0.00001 ====> 0.00016
+        pidController.setI(kI); // 0.00000001  |  0.0000009 | 0.00000042 ===> 0.
+        pidController.setD(kD); // 0 | 0.01 |  0  ===> 0
         pidController.setIZone(0);
-        pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058
+        pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058  ==> 0.000205
         pidController.setOutputRange(-1, 1);
 
        
