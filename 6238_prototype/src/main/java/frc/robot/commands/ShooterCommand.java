@@ -13,6 +13,19 @@ public class ShooterCommand extends CommandBase{
         addRequirements(ball);
     }
 
+    protected double getUpperShooterRPMTarget() {
+        return upperShooterSpeedTarget.get();
+    }
+
+    protected double getUpperShooterRPMActual() {
+        return ball.getRPMUpperMotor();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
     @Override
     public void execute() {
         ball.retract();
