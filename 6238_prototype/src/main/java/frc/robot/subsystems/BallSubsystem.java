@@ -71,12 +71,12 @@ public class BallSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("upperMotorSpeedError", upperMotorRPMTarget - getRPMUpperMotor());
     }
 
-    public static void activateLeftKicker(boolean activate){
-        leftKicker.set (activate);
+    public void activateLeftKicker(boolean activate){
+        leftKicker.set(activate);
     }
     
-    public static void activateRightKicker(boolean activate){
-        rightKicker.set (activate);
+    public void activateRightKicker(boolean activate){
+        rightKicker.set(activate);
     }
 
     public void setSpeed(double lowerSpeed, double upperMotorRPMTarget) {
