@@ -22,12 +22,13 @@ public class DriveCommand extends CommandBase {
     public DriveCommand(DriveSubsystem drive, Joystick joystick) {
         this.drive = drive;
         this.joystick = joystick;
-        addRequirements(drive);
         previousSpeed = 0;
         maximumDecceleration = deccelerationSlewRate.get(); // 0.03
         maximumAcceleration = accelerationSlewRate.get(); // 0.04
+        addRequirements(drive);
     }
 
+    @Override
     public void execute() {
         // temp
         maximumDecceleration = deccelerationSlewRate.get();

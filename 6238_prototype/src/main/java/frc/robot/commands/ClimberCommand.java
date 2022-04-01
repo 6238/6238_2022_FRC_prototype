@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimberCommand extends CommandBase {
@@ -18,6 +16,7 @@ public class ClimberCommand extends CommandBase {
 
     }
 
+    @Override
     public void execute() {
         if (autoExtendEnabled){
             climberSubsystem.setTranslation(1);
@@ -26,7 +25,6 @@ public class ClimberCommand extends CommandBase {
             } else {
                 climberSubsystem.rotateBackward();
             }
-
         } else {
             climberSubsystem.setTranslation(translationSpeed);
         }
@@ -56,8 +54,6 @@ public class ClimberCommand extends CommandBase {
     public void startAutoExtend() {
         autoExtendEnabled = true;
     }
-
-
 }
 
 
