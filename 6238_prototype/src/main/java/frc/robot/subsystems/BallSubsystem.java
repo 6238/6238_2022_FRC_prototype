@@ -26,6 +26,7 @@ public class BallSubsystem extends SubsystemBase {
     private double lowerSpeed;
     private boolean isExtended;
     private RelativeEncoder upperMotorEncoder;
+    private RelativeEncoder lowerMotorEncoder;
 
     SmartDashboardParam shooterPGainSlider = new SmartDashboardParam("shooterPGain");
     SmartDashboardParam shooterIGainSlider = new SmartDashboardParam("shooterIGain");
@@ -51,6 +52,8 @@ public class BallSubsystem extends SubsystemBase {
 
         lowerMotor = new CANSparkMax(Constants.BALL_LOWER_ID, MotorType.kBrushless);
 // yellow zipties are intake
+        lowerMotorEncoder = lowerMotor.getEncoder();
+
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 1);
         leftKicker = new Solenoid(PneumaticsModuleType.CTREPCM, 6);
         rightKicker = new Solenoid(PneumaticsModuleType.CTREPCM, 7);
@@ -131,5 +134,9 @@ public class BallSubsystem extends SubsystemBase {
 
     public double getRPMUpperMotor() {
         return -upperMotorEncoder.getVelocity();
+    }
+
+    public double getRPMLowerMotor() {
+        return lowerMotorEncoder.getVelocity();
     }
 }

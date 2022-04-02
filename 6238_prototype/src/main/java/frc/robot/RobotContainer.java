@@ -10,6 +10,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.StopShooterCommand;
+import frc.robot.commands.Intake.ExtendIntakeCommand;
 import frc.robot.commands.Intake.RetractIntakeCommand;
 import frc.robot.commands.Intake.RunIntakeCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -17,6 +18,7 @@ import frc.robot.commands.AutonomousComand;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.CameraSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -66,12 +68,18 @@ public class RobotContainer {
         ballSubsystem = new BallSubsystem();
 
         new JoystickButton(joystick, IOConstants.START_INTAKE)
-                .whenPressed(new RunIntakeCommand(ballSubsystem))
+                .whenPressed(
+                        new SequentialCommandGroup(
+                                new ExtendIntakeCommand(ballSubsystem),
+                                new RunIntakeCommand(ballSubsystem)
+                        )        
+                )
                 .whenReleased(new RetractIntakeCommand(ballSubsystem));
 
         new JoystickButton(joystick, IOConstants.START_SHOOTER)
                 .whenPressed(new ShooterCommand(ballSubsystem))
                 .whenReleased(new StopShooterCommand(ballSubsystem));
+
 
         new JoystickButton(joystick, IOConstants.RIGHT_KICKER)
                 .whenPressed(() -> BallSubsystem.activateRightKicker(true))
