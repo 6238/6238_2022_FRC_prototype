@@ -7,14 +7,17 @@ import frc.robot.subsystems.BallSubsystem;
 public class RetractIntakeCommand extends CommandBase{
     private final long timeLimit;
     private final BallSubsystem ball;
-    private final long startTime;
+    private long startTime;
     public RetractIntakeCommand(BallSubsystem ball) {
         this.ball = ball;
         timeLimit = 2000;
-        startTime = System.currentTimeMillis();
+        
         addRequirements(ball);
     }
-
+    @Override
+    public void initialize(){
+        startTime = System.currentTimeMillis();
+    }
     @Override
     public void execute() {
         ball.retract();
