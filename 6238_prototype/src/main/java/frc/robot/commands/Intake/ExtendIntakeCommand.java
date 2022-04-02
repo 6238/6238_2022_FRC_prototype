@@ -5,9 +5,10 @@ import frc.robot.commands.BallTunedConstants;
 import frc.robot.subsystems.BallSubsystem;
 
 public class ExtendIntakeCommand extends CommandBase{
-    BallSubsystem ball;
+    private final BallSubsystem ball;
     public ExtendIntakeCommand(BallSubsystem ball) {
         this.ball = ball;
+        addRequirements(ball);
     }
 
     @Override
@@ -18,7 +19,7 @@ public class ExtendIntakeCommand extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return ball.getRPMLowerMotor() > 3000;
+        return ball.getRPMLowerMotor() > 1000;
     }
 
     @Override

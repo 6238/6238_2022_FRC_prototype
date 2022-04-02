@@ -137,6 +137,6 @@ public class BallSubsystem extends SubsystemBase {
     }
 
     public double getRPMLowerMotor() {
-        return lowerMotorEncoder.getVelocity();
+        return -lowerMotorEncoder.getVelocity();
     }
 }

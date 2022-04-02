@@ -98,7 +98,7 @@ public class RobotContainer {
         addClimber();
         addDrive();
         addBall();
-        addCamera();
+        //addCamera();
     }
 
     public Command getAutonomousCommand() {
