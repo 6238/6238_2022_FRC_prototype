@@ -7,6 +7,7 @@ public class StopShooterCommand extends CommandBase {
     BallSubsystem ball;
     public StopShooterCommand(BallSubsystem ball) {
         this.ball = ball;
+        addRequirements(ball);
     }
 
     @Override

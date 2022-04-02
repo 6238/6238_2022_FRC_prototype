@@ -67,7 +67,7 @@ public class BallSubsystem extends SubsystemBase {
         pidController.setP(kP); // 0.00018  |  0.0001 | 0.00001 ====> 0.00016
         pidController.setI(kI); // 0.00000001  |  0.0000009 | 0.00000042 ===> 0.
         pidController.setD(kD); // 0 | 0.01 |  0  ===> 0
-        pidController.setIZone(0);
+        pidController.setIZone(100);
         pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058  ==> 0.000205
         pidController.setOutputRange(-1, 1);
 
@@ -123,7 +123,14 @@ public class BallSubsystem extends SubsystemBase {
         } else {
             doubleSolenoid.set(DoubleSolenoid.Value.kForward);
         }
-        pidController.setReference(-upperMotorRPMTarget, CANSparkMax.ControlType.kVelocity);
+
+        if (upperMotorRPMTarget == 0) {
+            pidController.setIAccum(0);
+            pidController.setReference(0, CANSparkMax.ControlType.kVelocity);
+            upperMotor.set(0);
+        } else {
+            pidController.setReference(-upperMotorRPMTarget, CANSparkMax.ControlType.kVelocity);
+        }
         lowerMotor.set(-lowerSpeed);
        
         SmartDashboard.putNumber("upperMotorRPMCurrent", getRPMUpperMotor());

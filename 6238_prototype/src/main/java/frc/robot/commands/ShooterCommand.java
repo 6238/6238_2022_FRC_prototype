@@ -17,9 +17,7 @@ public class ShooterCommand extends CommandBase{
     public ShooterCommand(BallSubsystem ball, PneumaticKickers kicker, double rpmTarget) {
         this.ball = ball;
         upperShooterRPMTarget = rpmTarget;
-        timeLimit = 2000;
-        timerStart = System.currentTimeMillis();
-        countdownStart = Long.MAX_VALUE;
+        timeLimit = 200;
         rpmDiffTolerance = 50;
         this.kicker = kicker;
         addRequirements(ball);
@@ -27,14 +25,19 @@ public class ShooterCommand extends CommandBase{
 
     private void restartTimer() {
         timerStart = System.currentTimeMillis();
-    }
 
+    }
+    @Override
+    public void initialize(){
+        timerStart = System.currentTimeMillis();
+        countdownStart = Long.MAX_VALUE;
+
+    } 
     @Override
     public void execute() {
         if (Math.abs(ball.getRPMUpperMotor() - upperShooterRPMTarget) > rpmDiffTolerance) {
             restartTimer();
         }
-
         if (System.currentTimeMillis() - timerStart > timeLimit) {
             switch (kicker) {
             case LEFT_KICKER:
@@ -53,10 +56,12 @@ public class ShooterCommand extends CommandBase{
                 countdownStart = System.currentTimeMillis();
             }
         }
+
+        ball.setSpeed(0, upperShooterRPMTarget); 
     }
 
     @Override
     public boolean isFinished() {
-        return System.currentTimeMillis() - countdownStart > 2000;
+        return System.currentTimeMillis() - countdownStart > 200;
     }
 }

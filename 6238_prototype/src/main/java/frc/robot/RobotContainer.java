@@ -10,11 +10,8 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.StopShooterCommand;
-<<<<<<< HEAD
 import frc.robot.commands.TuningShooterCommand;
-=======
 import frc.robot.commands.Intake.ExtendIntakeCommand;
->>>>>>> main
 import frc.robot.commands.Intake.RetractIntakeCommand;
 import frc.robot.commands.Intake.RunIntakeCommand;
 import frc.robot.commands.ShooterCommand.PneumaticKickers;
@@ -89,18 +86,6 @@ public class RobotContainer {
                         )
                 )
                 .whenReleased(new StopShooterCommand(ballSubsystem));
-<<<<<<< HEAD
-=======
-
-
-        new JoystickButton(joystick, IOConstants.RIGHT_KICKER)
-                .whenPressed(() -> BallSubsystem.activateRightKicker(true))
-                .whenReleased(() -> BallSubsystem.activateRightKicker(false));
-
-        new JoystickButton(joystick, IOConstants.LEFT_KICKER)
-                .whenPressed(() -> BallSubsystem.activateLeftKicker(true))
-                .whenReleased(() -> BallSubsystem.activateLeftKicker(false));
->>>>>>> main
     }
 
     private void addCamera() {
