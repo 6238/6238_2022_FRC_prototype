@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.BallSubsystem;
 
 public class ShooterCommand extends CommandBase{
@@ -9,11 +8,10 @@ public class ShooterCommand extends CommandBase{
 
     private final PneumaticKickers kicker;
     private final BallSubsystem ball; 
-    private final double upperShooterRPMTarget;
+    protected double upperShooterRPMTarget;
     private long timerStart;
     private final long timeLimit;
     private final double rpmDiffTolerance;
-    private boolean pneumaticsActivated;
     private long countdownStart;
 
     public ShooterCommand(BallSubsystem ball, PneumaticKickers kicker, double rpmTarget) {
@@ -24,7 +22,6 @@ public class ShooterCommand extends CommandBase{
         countdownStart = Long.MAX_VALUE;
         rpmDiffTolerance = 50;
         this.kicker = kicker;
-        pneumaticsActivated = true;
         addRequirements(ball);
     }
 
@@ -34,12 +31,11 @@ public class ShooterCommand extends CommandBase{
 
     @Override
     public void execute() {
-        if (ball.getRPMUpperMotor() < upperShooterRPMTarget - rpmDiffTolerance
-            || upperShooterRPMTarget + rpmDiffTolerance < ball.getRPMUpperMotor()) {
+        if (Math.abs(ball.getRPMUpperMotor() - upperShooterRPMTarget) > rpmDiffTolerance) {
             restartTimer();
         }
 
-        if (System.currentTimeMillis() - timerStart > timeLimit && !pneumaticsActivated) {
+        if (System.currentTimeMillis() - timerStart > timeLimit) {
             switch (kicker) {
             case LEFT_KICKER:
                 ball.activateLeftKicker(true);
@@ -52,20 +48,15 @@ public class ShooterCommand extends CommandBase{
                 ball.activateRightKicker(true);
                 break;
             }
-            pneumaticsActivated = true;
-            countdownStart = System.currentTimeMillis();
+
+            if (countdownStart == Long.MAX_VALUE) {
+                countdownStart = System.currentTimeMillis();
+            }
         }
     }
 
     @Override
     public boolean isFinished() {
         return System.currentTimeMillis() - countdownStart > 2000;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        ball.setSpeed(0, 0);
-        ball.activateLeftKicker(false);
-        ball.activateRightKicker(false);
     }
 }

@@ -9,6 +9,8 @@ import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.StopShooterCommand;
+import frc.robot.commands.TuningShooterCommand;
 import frc.robot.commands.Intake.RetractIntakeCommand;
 import frc.robot.commands.Intake.RunIntakeCommand;
 import frc.robot.commands.ShooterCommand.PneumaticKickers;
@@ -73,10 +75,11 @@ public class RobotContainer {
         new JoystickButton(joystick, IOConstants.START_SHOOTER)
                 .whenPressed(
                         new SequentialCommandGroup(
-                                new ShooterCommand(ballSubsystem, PneumaticKickers.LEFT_KICKER, 4000),
-                                new ShooterCommand(ballSubsystem, PneumaticKickers.RIGHT_KICKER, 4000)
+                                new TuningShooterCommand(ballSubsystem, PneumaticKickers.LEFT_KICKER),
+                                new TuningShooterCommand(ballSubsystem, PneumaticKickers.RIGHT_KICKER)
                         )
-                );
+                )
+                .whenReleased(new StopShooterCommand(ballSubsystem));
     }
 
     private void addCamera() {
