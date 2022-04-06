@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -8,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Constants;
 import frc.robot.SmartDashboardParam;
@@ -21,7 +25,13 @@ public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonFX talonRightFollowerTwo = new WPI_TalonFX(Constants.RIGHT_FOLLOWER_ID_TWO);
     private final DifferentialDrive robotDrive = new DifferentialDrive(talonLeftLeader, talonRightLeader);
 
+    private final double kCountsPerRev = 2048;
+    private final double kGearRatio = 20;
+    private final double kWheelRadiusInches = 2;
+
     private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter"); // 0.18
+
+    private final AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
     private double speed;
     private double rotation;
@@ -88,5 +98,27 @@ public class DriveSubsystem extends SubsystemBase {
   
         SmartDashboard.putNumber("leftMotorsEncoderVelocity", talonLeftLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
         SmartDashboard.putNumber("rightMotorsEncoderVelocity", talonRightLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
+    }
+
+    private double nativeUnitsToDistanceMeters(double sensorCounts){
+        double motorRotations = sensorCounts / kCountsPerRev;
+        double wheelRotations = motorRotations / kGearRatio;
+        double positionMeters = wheelRotations * (2 * Math.PI * Units.inchesToMeters(kWheelRadiusInches));
+        return positionMeters;
+    }
+
+    public void resetEncoders() {
+        talonLeftLeader.setSelectedSensorPosition(0);
+        talonRightLeader.setSelectedSensorPosition(0);
+    }
+
+    public double getPosition() {
+        return nativeUnitsToDistanceMeters(
+            talonLeftLeader.getSelectedSensorPosition() / 2
+            + talonRightFollowerTwo.getSelectedSensorPosition() / 2);
+    }
+
+    public double getAngle() {
+        return Math.IEEEremainder(ahrs.getAngle(), 360);
     }
 }
