@@ -10,7 +10,7 @@ public class RetractIntakeCommand extends CommandBase{
     private long startTime;
     public RetractIntakeCommand(BallSubsystem ball) {
         this.ball = ball;
-        timeLimit = 2000;
+        timeLimit = 500;
         
         addRequirements(ball);
     }
