@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.StopShooterCommand;
 import frc.robot.commands.TuningShooterCommand;
 import frc.robot.commands.Intake.ExtendIntakeCommand;

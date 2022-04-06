@@ -28,10 +28,10 @@ public class BallSubsystem extends SubsystemBase {
     private RelativeEncoder upperMotorEncoder;
     private RelativeEncoder lowerMotorEncoder;
 
-    SmartDashboardParam shooterPGainSlider = new SmartDashboardParam("shooterPGain");
-    SmartDashboardParam shooterIGainSlider = new SmartDashboardParam("shooterIGain");
-    SmartDashboardParam shooterDGainSlider = new SmartDashboardParam("shooterDGain");
-    SmartDashboardParam shooterFFGainSlider = new SmartDashboardParam("shooterFFGain");
+    SmartDashboardParam shooterPGainSlider = new SmartDashboardParam("shooterPGain", 0.00016);
+    SmartDashboardParam shooterIGainSlider = new SmartDashboardParam("shooterIGain",0.000001);
+    SmartDashboardParam shooterDGainSlider = new SmartDashboardParam("shooterDGain",0);
+    SmartDashboardParam shooterFFGainSlider = new SmartDashboardParam("shooterFFGain",0.000205);
 
     double kP;
     double kI;

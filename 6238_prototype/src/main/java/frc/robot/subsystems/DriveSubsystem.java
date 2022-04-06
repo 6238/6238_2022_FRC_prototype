@@ -21,7 +21,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonFX talonRightFollowerTwo = new WPI_TalonFX(Constants.RIGHT_FOLLOWER_ID_TWO);
     private final DifferentialDrive robotDrive = new DifferentialDrive(talonLeftLeader, talonRightLeader);
 
-    private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter"); // 0.18
+    private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter", 16); // 0.18
 
     private double speed;
     private double rotation;
