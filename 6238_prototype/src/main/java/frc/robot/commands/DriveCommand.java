@@ -14,8 +14,8 @@ public class DriveCommand extends CommandBase {
     private double maximumAcceleration;
     // Positive Value
 
-    private final SmartDashboardParam accelerationSlewRate = new SmartDashboardParam("accelerationSlewRate");
-    private final SmartDashboardParam deccelerationSlewRate = new SmartDashboardParam("deccelerationSlewRate");
+    private final SmartDashboardParam accelerationSlewRate = new SmartDashboardParam("accelerationSlewRate", 0.05);
+    private final SmartDashboardParam deccelerationSlewRate = new SmartDashboardParam("deccelerationSlewRate", 1);
 
     private double previousSpeed;
 
