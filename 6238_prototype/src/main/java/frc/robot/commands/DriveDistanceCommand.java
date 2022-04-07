@@ -10,9 +10,9 @@ public class DriveDistanceCommand extends PIDCommand{
     private final double target;
     private final DriveSubsystem driveSubsystem;
 
-    SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive");
-    SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive");
-    SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive");
+    SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0);
+    SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive", 0);
+    SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive", 0);
 
     private double kP;
     private double kI;
@@ -26,7 +26,7 @@ public class DriveDistanceCommand extends PIDCommand{
             new PIDController(0, 0, 0),
             driveSubsystem::getPosition,
             targetDistanceMeters,
-            output -> driveSubsystem.setDrive(0, output),
+            output -> driveSubsystem.setDrive(output > 0.3 ? 0.3 : (output < -0.3 ? -0.3 : output), 0),
             driveSubsystem
             );
         this.target = targetDistanceMeters;
@@ -37,6 +37,8 @@ public class DriveDistanceCommand extends PIDCommand{
         // setpoint before it is considered as having reached the reference
         getController()
             .setTolerance(kDistanceToleranceMeters, kSpeedToleranceMetersPerS);
+
+        // addRequirements(driveSubsystem) is called in the parent constructor
     }
 
     @Override

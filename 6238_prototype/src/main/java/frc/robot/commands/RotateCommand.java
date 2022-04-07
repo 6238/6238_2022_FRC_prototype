@@ -10,9 +10,9 @@ public class RotateCommand extends PIDCommand{
     private final double target;
     private final DriveSubsystem driveSubsystem;
 
-    SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive");
-    SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive");
-    SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive");
+    SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0);
+    SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive", 0);
+    SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive", 0);
 
     private double kP;
     private double kI;
@@ -26,7 +26,7 @@ public class RotateCommand extends PIDCommand{
             new PIDController(0, 0, 0),
             driveSubsystem::getAngle,
             targetAngleDegrees,
-            output -> driveSubsystem.setDrive(0, output),
+            output -> driveSubsystem.setDrive(0, output > 0.3 ? 0.3 : (output < -0.3 ? -0.3 : output)),
             driveSubsystem
             );
         
@@ -39,10 +39,13 @@ public class RotateCommand extends PIDCommand{
         // setpoint before it is considered as having reached the reference
         getController()
             .setTolerance(kTurnToleranceDeg, kTurnRateToleranceDegPerS);
+        
+        // addRequirements(driveSubsystem) is called in the parent constructor
     }
 
     @Override
     public void execute() {
+        super.execute();
         if (kPSlider.get() != kP) {
             kP = kPSlider.get();
             getController().setP(kP);
@@ -55,7 +58,7 @@ public class RotateCommand extends PIDCommand{
             kD = kDSlider.get();
             getController().setD(kD);
         }
-        SmartDashboard.putNumber("Distance Error", driveSubsystem.getAngle() - target);
+        SmartDashboard.putNumber("Rotate Error", driveSubsystem.getAngle() - target);
     }
     
     @Override

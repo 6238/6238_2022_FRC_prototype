@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +26,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final double kCountsPerRev = 2048;
     private final double kGearRatio = 20;
-    private final double kWheelRadiusInches = 2;
+    private final double kWheelRadiusInches = 3;
 
     private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter"); // 0.18
 
@@ -115,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
     public double getPosition() {
         return nativeUnitsToDistanceMeters(
             talonLeftLeader.getSelectedSensorPosition() / 2
-            + talonRightFollowerTwo.getSelectedSensorPosition() / 2);
+            + talonRightLeader.getSelectedSensorPosition() / 2);
     }
 
     public double getAngle() {
