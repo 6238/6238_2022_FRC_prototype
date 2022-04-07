@@ -28,7 +28,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final double kGearRatio = 20;
     private final double kWheelRadiusInches = 3;
 
-    private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter"); // 0.18
+    private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter", 16); // 0.18
 
     private final AHRS ahrs = new AHRS(SPI.Port.kMXP);
 

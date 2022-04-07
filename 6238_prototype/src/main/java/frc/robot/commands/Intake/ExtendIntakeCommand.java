@@ -6,20 +6,31 @@ import frc.robot.subsystems.BallSubsystem;
 
 public class ExtendIntakeCommand extends CommandBase{
     private final BallSubsystem ball;
+    private long timerStart;
+    private long timeLimit;
+
     public ExtendIntakeCommand(BallSubsystem ball) {
         this.ball = ball;
+        timeLimit = 500;
         addRequirements(ball);
+    }
+
+    @Override 
+    public void initialize(){
+        timerStart = System.currentTimeMillis();
     }
 
     @Override
     public void execute() {
         ball.setSpeed(BallTunedConstants.INTAKE_MODE_LOWER_MOTOR_SPEED,
             BallTunedConstants.INTAKE_MODE_UPPER_MOTOR_RPM);
-    }
 
+        }
     @Override
     public boolean isFinished() {
-        return ball.getRPMLowerMotor() > 1000;
+
+        return (System.currentTimeMillis() - timerStart > timeLimit);
+            
     }
 
     @Override
