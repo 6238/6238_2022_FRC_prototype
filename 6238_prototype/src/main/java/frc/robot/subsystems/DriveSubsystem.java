@@ -73,6 +73,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("Yaw: " + ahrs.getAngle());
+        System.out.println("Pitch: " + ahrs.getPitch());
+        System.out.println("Roll: " + ahrs.getRoll());
+        System.out.println("FirmwareVersion: " + ahrs.getFirmwareVersion());
+        System.out.println("IMU_Byte_Count: " + ahrs.getByteCount());
+        System.out.println("IMU_Update_Count" + ahrs.getUpdateCount());
+        System.out.println("IMU_Connected" + ahrs.isConnected());
+
+
         boolean isBraking = Math.abs(speed) < 0.01 && Math.abs(rotation) < 0.01;  
         if (isBraking && !this.isBraking) {
             this.isBraking = true;
