@@ -10,4 +10,5 @@ public final class IOConstants {
     public static final int ROTATE_DOWN = 8;
     public static final int CLIMBER_AUTO_EXTEND = 9;
     public static final int CLIMBER_LIMIT_TOGGLE = 11;
+    public static final int TARGET_ANGLE_DEGREES = 3;
 }

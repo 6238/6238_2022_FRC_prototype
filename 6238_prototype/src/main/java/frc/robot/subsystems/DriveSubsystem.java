@@ -37,6 +37,8 @@ public class DriveSubsystem extends SubsystemBase {
     private final int PID_ID;
     boolean isBraking;
 
+    private final SmartDashboardParam voltageClamp = new SmartDashboardParam("voltageClamp", 0.4);
+
     public DriveSubsystem() {
         PID_ID = 0;
         isBraking = true;
@@ -73,14 +75,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("Yaw: " + ahrs.getAngle());
+     /*   System.out.println("Yaw: " + ahrs.getAngle());
         System.out.println("Pitch: " + ahrs.getPitch());
         System.out.println("Roll: " + ahrs.getRoll());
         System.out.println("FirmwareVersion: " + ahrs.getFirmwareVersion());
         System.out.println("IMU_Byte_Count: " + ahrs.getByteCount());
         System.out.println("IMU_Update_Count" + ahrs.getUpdateCount());
         System.out.println("IMU_Connected" + ahrs.isConnected());
-
+*/
 
         boolean isBraking = Math.abs(speed) < 0.01 && Math.abs(rotation) < 0.01;  
         if (isBraking && !this.isBraking) {
@@ -106,6 +108,17 @@ public class DriveSubsystem extends SubsystemBase {
   
         SmartDashboard.putNumber("leftMotorsEncoderVelocity", talonLeftLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
         SmartDashboard.putNumber("rightMotorsEncoderVelocity", talonRightLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
+    }
+
+    public void setPIDRotateOutput(double output) {
+        double voltageClampValue = voltageClamp.get();
+        System.out.println("Rotation Input: " + voltageClamp.get());
+        double rotationInputClamped = output > voltageClampValue ? voltageClampValue :
+            (output < -voltageClampValue ? -voltageClampValue : output);
+
+        System.out.println("Rotation Input Clamped: " + rotationInputClamped);
+        setDrive(0, rotationInputClamped);
+        System.out.println("setPIDRotateOutput " + output);
     }
 
     private double nativeUnitsToDistanceMeters(double sensorCounts){
