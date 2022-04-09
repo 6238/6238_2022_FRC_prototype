@@ -10,7 +10,7 @@ public class DriveDistanceCommand extends PIDCommand{
     private final double target;
     private final DriveSubsystem driveSubsystem;
 
-    SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0);
+    SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0.3);
     SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive", 0);
     SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive", 0);
 
@@ -18,31 +18,40 @@ public class DriveDistanceCommand extends PIDCommand{
     private double kI;
     private double kD;
 
-    static private final double kSpeedToleranceMetersPerS = 2.0;
-    static private final double kDistanceToleranceMeters = 2.0;
+    private long startTime;
+
+    static private final double kSpeedToleranceMetersPerS = 0.00001;
+    static private final double kDistanceToleranceMeters = 0.0001;
 
     public DriveDistanceCommand(double targetDistanceMeters, DriveSubsystem driveSubsystem) {
         super(
             new PIDController(0, 0, 0),
             driveSubsystem::getPosition,
             targetDistanceMeters,
-            output -> driveSubsystem.setDrive(output > 0.3 ? 0.3 : (output < -0.3 ? -0.3 : output), 0),
+            driveSubsystem::setPIDDriveOutput,
             driveSubsystem
             );
         this.target = targetDistanceMeters;
         this.driveSubsystem = driveSubsystem;
-        driveSubsystem.resetEncoders();
 
         // kSppedToleranceMetersPerS ensures the robot is stationary at the
         // setpoint before it is considered as having reached the reference
         getController()
             .setTolerance(kDistanceToleranceMeters, kSpeedToleranceMetersPerS);
 
-        // addRequirements(driveSubsystem) is called in the parent constructor
+        addRequirements(driveSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+        System.out.println("initialize");
+        driveSubsystem.resetEncoders();
+        startTime = System.currentTimeMillis();
     }
 
     @Override
     public void execute() {
+        System.out.println("execute");
         if (kPSlider.get() != kP) {
             kP = kPSlider.get();
             getController().setP(kP);
@@ -60,6 +69,9 @@ public class DriveDistanceCommand extends PIDCommand{
 
     @Override
     public boolean isFinished() {
-        return getController().atSetpoint();
+        System.out.println("isFinished");
+        System.out.println("getController().atSetpoint(): " + getController().atSetpoint());
+        System.out.println("(System.currentTimeMillis() - startTime > 3000: " + (System.currentTimeMillis() - startTime > 3000));
+        return false; // getController().atSetpoint() || (System.currentTimeMillis() - startTime > 3000);
     }
 }

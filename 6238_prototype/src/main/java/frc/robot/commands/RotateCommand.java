@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.SmartDashboardParam;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class RotateCommand extends PIDCommand{
+public class RotateCommand extends PIDCommand {
     private final double target;
     private final DriveSubsystem driveSubsystem;
+
+    private long startTime;
 
     SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0.03);
     SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive", 0);
@@ -42,6 +44,11 @@ public class RotateCommand extends PIDCommand{
         addRequirements(driveSubsystem);
     }
 
+    @Override
+    public void initialize() {
+        startTime = System.currentTimeMillis();
+    }
+
     
     @Override
     public void execute() {
@@ -64,6 +71,6 @@ public class RotateCommand extends PIDCommand{
     
     @Override
     public boolean isFinished() {
-        return getController().atSetpoint();
+        return getController().atSetpoint() || System.currentTimeMillis() - startTime > 3000;
     }
 }

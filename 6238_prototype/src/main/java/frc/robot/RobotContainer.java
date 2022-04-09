@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.commands.StopShooterCommand;
 import frc.robot.commands.TuningShooterCommand;
@@ -107,6 +108,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         System.out.println("getAutononmousCommand ");
         // return new RotateCommand(targetAngleDegrees, driveSubsystem);
-        return new AutonomousComand(driveSubsystem, ballSubsystem);
+        // return new AutonomousComand(driveSubsystem, ballSubsystem);
+        return new DriveDistanceCommand(1, driveSubsystem);
     }
 }

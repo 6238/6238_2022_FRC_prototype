@@ -108,24 +108,32 @@ public class DriveSubsystem extends SubsystemBase {
   
         SmartDashboard.putNumber("leftMotorsEncoderVelocity", talonLeftLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
         SmartDashboard.putNumber("rightMotorsEncoderVelocity", talonRightLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
+
+        SmartDashboard.putNumber("distanceDriven", getPosition());
     }
 
     public void setPIDRotateOutput(double output) {
         double voltageClampValue = voltageClamp.get();
-        System.out.println("Rotation Input: " + voltageClamp.get());
         double rotationInputClamped = output > voltageClampValue ? voltageClampValue :
             (output < -voltageClampValue ? -voltageClampValue : output);
 
-        System.out.println("Rotation Input Clamped: " + rotationInputClamped);
         setDrive(0, rotationInputClamped);
-        System.out.println("setPIDRotateOutput " + output);
+    }
+
+    public void setPIDDriveOutput(double output) {
+        double voltageClampValue = voltageClamp.get();
+        double driveInputClamped = output > voltageClampValue ? voltageClampValue :
+            (output < -voltageClampValue ? -voltageClampValue : output);
+        System.out.println("driveInputClamped: " + driveInputClamped + ", output: " + output + " Clamp Value: " + voltageClampValue);
+        setDrive(driveInputClamped, 0);
     }
 
     private double nativeUnitsToDistanceMeters(double sensorCounts){
         double motorRotations = sensorCounts / kCountsPerRev;
         double wheelRotations = motorRotations / kGearRatio;
         double positionMeters = wheelRotations * (2 * Math.PI * Units.inchesToMeters(kWheelRadiusInches));
-        return positionMeters;
+
+        return positionMeters * 2.5106;
     }
 
     public void resetEncoders() {
@@ -134,12 +142,19 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return nativeUnitsToDistanceMeters(
+        double position = 
+        nativeUnitsToDistanceMeters(
             talonLeftLeader.getSelectedSensorPosition() / 2
             + talonRightLeader.getSelectedSensorPosition() / 2);
+        System.out.println("robotPosition: " + position);
+        return position;
     }
 
     public double getAngle() {
         return Math.IEEEremainder(ahrs.getAngle(), 360);
+    }
+
+    public void zeroGyroAngle() {
+        ahrs.zeroYaw();
     }
 }
