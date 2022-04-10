@@ -7,7 +7,7 @@ public class TuningShooterCommand extends ShooterCommand {
     SmartDashboardParam upperShooterRPMTargetSlider;
     public TuningShooterCommand(BallSubsystem ball, PneumaticKickers kicker) {
         super(ball, kicker, 0);
-        upperShooterRPMTargetSlider = new SmartDashboardParam("upperShooterRPMTarget", 4600);
+        upperShooterRPMTargetSlider = new SmartDashboardParam("upperShooterRPMTarget", 4400);
     }
 
     @Override

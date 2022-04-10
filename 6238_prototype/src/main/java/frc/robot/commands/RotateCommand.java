@@ -21,6 +21,7 @@ public class RotateCommand extends PIDCommand{
     static private final double kTurnRateToleranceDegPerS = 2.0;
     static private final double kTurnToleranceDeg = 2.0;
 
+
     public RotateCommand(double targetAngleDegrees, DriveSubsystem driveSubsystem) {
         super(
             new PIDController(0, 0, 0),
@@ -42,6 +43,10 @@ public class RotateCommand extends PIDCommand{
         addRequirements(driveSubsystem);
     }
 
+    @Override
+    public void initialize() {
+        driveSubsystem.resetAngle();
+    }
     
     @Override
     public void execute() {

@@ -133,6 +133,10 @@ public class DriveSubsystem extends SubsystemBase {
         talonRightLeader.setSelectedSensorPosition(0);
     }
 
+    public void resetAngle() {
+        ahrs.zeroYaw();
+    }
+
     public double getPosition() {
         return nativeUnitsToDistanceMeters(
             talonLeftLeader.getSelectedSensorPosition() / 2
