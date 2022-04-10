@@ -9,16 +9,12 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RotateCommand extends PIDCommand {
     private final double target;
     private final DriveSubsystem driveSubsystem;
-
+    private final int waitTime = 5000;
     private long startTime;
 
     SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0.03);
     SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive", 0);
     SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive", 0);
-
-    private double kP;
-    private double kI;
-    private double kD;
 
     static private final double kTurnRateToleranceDegPerS = 2.0;
     static private final double kTurnToleranceDeg = 2.0;
@@ -33,7 +29,6 @@ public class RotateCommand extends PIDCommand {
 
         target = targetAngleDegrees;
         this.driveSubsystem = driveSubsystem;
-        System.out.println ("RotateCommandConstruct" + targetAngleDegrees);
         getController().enableContinuousInput(-180, 180);
 
         // kTurnRateToleranceDegPerS ensures the robot is stationary at the
@@ -47,30 +42,37 @@ public class RotateCommand extends PIDCommand {
     @Override
     public void initialize() {
         startTime = System.currentTimeMillis();
+        driveSubsystem.zeroGyroAngle();
     }
 
     
     @Override
     public void execute() {
+        //runs the pid commnand
         super.execute();
-        if (kPSlider.get() != kP) {
-            kP = kPSlider.get();
-            getController().setP(kP);
+
+
+        //change different pid if smart dashboard changes
+        if (kPSlider.get() != getController().getP()) {
+            getController().setP(kPSlider.get());
         }
-        if (kISlider.get() != kI) {
-            kI = kISlider.get();
-            getController().setI(kI);
+        if (kISlider.get() != getController().getI()) {
+            getController().setI(kISlider.get());
         }
-        if (kDSlider.get() != kD) {
-            kD = kDSlider.get();
-            getController().setD(kD);
+        if (kDSlider.get() != getController().getD()) {
+            getController().setD(kDSlider.get());
         }
+        //log of how far we are
         SmartDashboard.putNumber("Rotate Error", driveSubsystem.getAngle() - target);
-        System.out.println ("RotateCommandExecute" + driveSubsystem.getAngle() + " " + target);
+        System.out.println("Rotate Error: " + (driveSubsystem.getAngle() - target));
     }
     
     @Override
     public boolean isFinished() {
-        return getController().atSetpoint() || System.currentTimeMillis() - startTime > 3000;
+        //debugging
+        if(getController().atSetpoint()) System.out.println("At Setpoint");
+        if( System.currentTimeMillis() - startTime > waitTime) System.out.print("Time Reached");
+        //actually returning
+        return getController().atSetpoint() || System.currentTimeMillis() - startTime > waitTime;
     }
 }

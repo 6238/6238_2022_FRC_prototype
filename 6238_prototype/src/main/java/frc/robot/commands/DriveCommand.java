@@ -35,7 +35,7 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // temp
+
         maximumDecceleration = deccelerationSlewRate.get();
         maximumAcceleration = accelerationSlewRate.get();
 

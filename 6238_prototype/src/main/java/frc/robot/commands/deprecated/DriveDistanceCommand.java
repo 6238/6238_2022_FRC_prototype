@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.deprecated;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,14 +44,13 @@ public class DriveDistanceCommand extends PIDCommand{
 
     @Override
     public void initialize() {
-        System.out.println("initialize");
         driveSubsystem.resetEncoders();
         startTime = System.currentTimeMillis();
     }
 
     @Override
     public void execute() {
-        System.out.println("execute");
+        super.execute();
         if (kPSlider.get() != kP) {
             kP = kPSlider.get();
             getController().setP(kP);
@@ -65,13 +64,11 @@ public class DriveDistanceCommand extends PIDCommand{
             getController().setD(kD);
         }
         SmartDashboard.putNumber("Distance Error", driveSubsystem.getPosition() - target);
+        System.out.println(driveSubsystem.getPosition() - target);
     }
 
     @Override
     public boolean isFinished() {
-        System.out.println("isFinished");
-        System.out.println("getController().atSetpoint(): " + getController().atSetpoint());
-        System.out.println("(System.currentTimeMillis() - startTime > 3000: " + (System.currentTimeMillis() - startTime > 3000));
-        return false; // getController().atSetpoint() || (System.currentTimeMillis() - startTime > 3000);
+        return getController().atSetpoint() || (System.currentTimeMillis() - startTime > 3000);
     }
 }

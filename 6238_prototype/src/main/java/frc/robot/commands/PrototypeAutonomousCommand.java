@@ -28,31 +28,32 @@ public class PrototypeAutonomousCommand extends SequentialCommandGroup {
         this.driveSubsystem = driveSubsystem;
         addCommands(
             // Drive Backwards
-            new DriveDistanceCommand(-0.6, driveSubsystem),
+            new TimedDriveCommand(driveSubsystem, 1.5),
+            // new DriveDistanceCommand(-0.6, driveSubsystem),
             
             // Shoot first ball
             new ShooterCommand(ballSubsystem, PneumaticKickers.BOTH, 4600),
             new StopShooterCommand(ballSubsystem),
 
             // Rotate 180 degrees, extend intake
-            new RotateCommand(180, driveSubsystem),
-            new ExtendIntakeCommand(ballSubsystem),
-
+            // new RotateCommand(180, driveSubsystem),
+            new ExtendIntakeCommand(ballSubsystem)
+/*
             // drive forward to intake ball
             new ParallelRaceGroup(
                 new RunIntakeCommand(ballSubsystem),
-                new DriveDistanceCommand(2.0, driveSubsystem)
+                new TimedDriveCommand(driveSubsystem, 3.0)
                 ),
             new RetractIntakeCommand(ballSubsystem),
 
             // Rotate towards hub, drive to original position
             new RotateCommand(0, driveSubsystem),
-            new DriveDistanceCommand(2.0, driveSubsystem),
+            new TimedDriveCommand(driveSubsystem, 3.0),
 
             // Shoot both balls
             new ShooterCommand(ballSubsystem, PneumaticKickers.BOTH, 4600),
             new StopShooterCommand(ballSubsystem)
-
+*/
 
         );
     }
