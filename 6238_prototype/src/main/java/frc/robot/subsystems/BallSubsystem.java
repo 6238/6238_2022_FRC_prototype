@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -14,6 +15,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
+import frc.robot.IOConstants;
 import frc.robot.SmartDashboardParam;
 
 public class BallSubsystem extends SubsystemBase {
@@ -31,7 +33,7 @@ public class BallSubsystem extends SubsystemBase {
     SmartDashboardParam shooterPGainSlider = new SmartDashboardParam("shooterPGain", 0.00016);
     SmartDashboardParam shooterIGainSlider = new SmartDashboardParam("shooterIGain",0.000001);
     SmartDashboardParam shooterDGainSlider = new SmartDashboardParam("shooterDGain",0);
-    SmartDashboardParam shooterFFGainSlider = new SmartDashboardParam("shooterFFGain",0.000205);
+    SmartDashboardParam shooterFFGainSlider = new SmartDashboardParam("shooterFFGain",0.000208);
 
     double kP;
     double kI;
@@ -71,7 +73,6 @@ public class BallSubsystem extends SubsystemBase {
         pidController.setFF(kFF); // 0.00018  | .00018 | 0.0000058  ==> 0.000205
         pidController.setOutputRange(-1, 1);
 
-       
     }
 
     public void activateLeftKicker(boolean activate){
@@ -117,6 +118,8 @@ public class BallSubsystem extends SubsystemBase {
             kFF = shooterFFGainSlider.get();
             pidController.setFF(kFF);
         }
+
+        
 
         if (isExtended) {
             doubleSolenoid.set(DoubleSolenoid.Value.kReverse);

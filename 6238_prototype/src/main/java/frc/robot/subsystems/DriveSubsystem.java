@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -8,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Constants;
 import frc.robot.SmartDashboardParam;
@@ -21,12 +24,20 @@ public class DriveSubsystem extends SubsystemBase {
     private final WPI_TalonFX talonRightFollowerTwo = new WPI_TalonFX(Constants.RIGHT_FOLLOWER_ID_TWO);
     private final DifferentialDrive robotDrive = new DifferentialDrive(talonLeftLeader, talonRightLeader);
 
+    private final double kCountsPerRev = 2048;
+    private final double kGearRatio = 20;
+    private final double kWheelRadiusInches = 3;
+
     private final SmartDashboardParam currentLimit = new SmartDashboardParam("currentLimiter", 16); // 0.18
+
+    private final AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
     private double speed;
     private double rotation;
     private final int PID_ID;
     boolean isBraking;
+
+    private final SmartDashboardParam voltageClamp = new SmartDashboardParam("voltageClamp", 0.4);
 
     public DriveSubsystem() {
         PID_ID = 0;
@@ -64,6 +75,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+     /*   System.out.println("Yaw: " + ahrs.getAngle());
+        System.out.println("Pitch: " + ahrs.getPitch());
+        System.out.println("Roll: " + ahrs.getRoll());
+        System.out.println("FirmwareVersion: " + ahrs.getFirmwareVersion());
+        System.out.println("IMU_Byte_Count: " + ahrs.getByteCount());
+        System.out.println("IMU_Update_Count" + ahrs.getUpdateCount());
+        System.out.println("IMU_Connected" + ahrs.isConnected());
+*/
+
         boolean isBraking = Math.abs(speed) < 0.01 && Math.abs(rotation) < 0.01;  
         if (isBraking && !this.isBraking) {
             this.isBraking = true;
@@ -88,5 +108,42 @@ public class DriveSubsystem extends SubsystemBase {
   
         SmartDashboard.putNumber("leftMotorsEncoderVelocity", talonLeftLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
         SmartDashboard.putNumber("rightMotorsEncoderVelocity", talonRightLeader.getSelectedSensorVelocity(PID_ID) * 0.1);
+    }
+
+    public void setPIDRotateOutput(double output) {
+        double voltageClampValue = voltageClamp.get();
+        System.out.println("Rotation Input: " + voltageClamp.get());
+        double rotationInputClamped = output > voltageClampValue ? voltageClampValue :
+            (output < -voltageClampValue ? -voltageClampValue : output);
+
+        System.out.println("Rotation Input Clamped: " + rotationInputClamped);
+        setDrive(0, rotationInputClamped);
+        System.out.println("setPIDRotateOutput " + output);
+    }
+
+    private double nativeUnitsToDistanceMeters(double sensorCounts){
+        double motorRotations = sensorCounts / kCountsPerRev;
+        double wheelRotations = motorRotations / kGearRatio;
+        double positionMeters = wheelRotations * (2 * Math.PI * Units.inchesToMeters(kWheelRadiusInches));
+        return positionMeters;
+    }
+
+    public void resetEncoders() {
+        talonLeftLeader.setSelectedSensorPosition(0);
+        talonRightLeader.setSelectedSensorPosition(0);
+    }
+
+    public void resetAngle() {
+        ahrs.zeroYaw();
+    }
+
+    public double getPosition() {
+        return nativeUnitsToDistanceMeters(
+            talonLeftLeader.getSelectedSensorPosition() / 2
+            + talonRightLeader.getSelectedSensorPosition() / 2);
+    }
+
+    public double getAngle() {
+        return Math.IEEEremainder(ahrs.getAngle(), 360);
     }
 }

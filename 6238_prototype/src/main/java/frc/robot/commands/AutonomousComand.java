@@ -15,7 +15,7 @@ public class AutonomousComand extends CommandBase {
         this.drive = drive;
         this.ball = ball;
         timeLimit = 10000;
-        speed = 0.5;
+        speed = 0.4;
         drive.setDrive(0,0);
         ball.setSpeed (0,0);
         addRequirements(drive, ball);
@@ -28,21 +28,22 @@ public class AutonomousComand extends CommandBase {
     @Override
     public void execute() {
         long timeElapsed = System.currentTimeMillis() - startTime;
-        if (2000 < timeElapsed && timeElapsed < 7000 ){
+        if (500 < timeElapsed && timeElapsed < 6000 ){
             drive.setDrive(0,0);
-            double bottomMotorSpeed = 0;
             double upperMotorRPM = BallTunedConstants.AUTONOMOUS_MODE_UPPER_MOTOR_RPM;
-            double upperMotorRPMCurrent = ball.getRPMUpperMotor();
+            ball.setSpeed(0, upperMotorRPM);
 
-            if (BallTunedConstants.AUTONOMOUS_MODE_UPPER_MOTOR_RPM - 50 < upperMotorRPMCurrent
-                && upperMotorRPMCurrent< BallTunedConstants.AUTONOMOUS_MODE_UPPER_MOTOR_RPM + 50) {
-                bottomMotorSpeed = 1;
+            if (3000 < timeElapsed && timeElapsed < 6000) {
+                ball.activateLeftKicker(true);
+                ball.activateRightKicker(true);
+            } else {
+                ball.activateLeftKicker(false);
+                ball.activateRightKicker(false);
             }
-            ball.setSpeed(bottomMotorSpeed, upperMotorRPM);
+
         } else {
             drive.setDrive(speed,0);
             ball.setSpeed(0,0);
-
         }
     }
     
@@ -56,4 +57,5 @@ public class AutonomousComand extends CommandBase {
     public void end(boolean interrupted) {
         drive.setDrive(0,0);
     }
+    
 }

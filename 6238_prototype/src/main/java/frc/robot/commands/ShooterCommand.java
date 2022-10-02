@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.IOConstants;
 import frc.robot.subsystems.BallSubsystem;
 
 public class ShooterCommand extends CommandBase{
@@ -14,7 +16,12 @@ public class ShooterCommand extends CommandBase{
     private final long timeLimit;
     private final double rpmDiffTolerance;
     private long countdownStart;
-    
+
+
+    private Joystick joystick;
+    enum OverridePreviousKickerEnum {LEFT, RIGHT};
+    OverridePreviousKickerEnum overridePreviousKicker;
+
 
     private void printStuff(String location){
   /* dont run debugging in comp
@@ -34,11 +41,13 @@ public class ShooterCommand extends CommandBase{
 
 
     public ShooterCommand(BallSubsystem ball, PneumaticKickers kicker, double rpmTarget) {
+        overridePreviousKicker = OverridePreviousKickerEnum.RIGHT;
         this.ball = ball;
         upperShooterRPMTarget = rpmTarget;
         timeLimit = 300;
-        rpmDiffTolerance = 50;
+        rpmDiffTolerance = 100;
         this.kicker = kicker;
+        this.joystick = new Joystick(IOConstants.JOYSTICK_PORT);
         addRequirements(ball);
     }
 
@@ -55,11 +64,13 @@ public class ShooterCommand extends CommandBase{
     @Override
     public void execute() {
         printStuff("Execute");
-        if (Math.abs(ball.getRPMUpperMotor() - upperShooterRPMTarget) > rpmDiffTolerance) {
+        if (Math.abs(ball.getRPMUpperMotor() - upperShooterRPMTarget) > rpmDiffTolerance && !joystick.getRawButton(IOConstants.OVERRIDE_SHOOTER_SENSOR)) {
 
             restartTimer();
         }
+
         if (System.currentTimeMillis() - timerStart > timeLimit) {
+
             printStuff("Shoot");
 
             switch (kicker) {

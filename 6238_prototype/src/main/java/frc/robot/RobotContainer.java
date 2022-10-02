@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import java.sql.Driver;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.RotateCommand;
 import frc.robot.commands.StopShooterCommand;
 import frc.robot.commands.TuningShooterCommand;
 import frc.robot.commands.Intake.ExtendIntakeCommand;
@@ -30,6 +33,7 @@ public class RobotContainer {
     private BallSubsystem ballSubsystem;
     private Joystick joystick;
     private CameraSubsystem cameraSubsystem;
+    private final double targetAngleDegrees = 180;
 
     private void addClimber() {
         joystick = new Joystick(IOConstants.JOYSTICK_PORT);
@@ -57,12 +61,14 @@ public class RobotContainer {
 
         new JoystickButton(joystick, IOConstants.CLIMBER_LIMIT_TOGGLE)
                 .whenPressed(() -> climberSubsystem.toggleLimitSwitchEnabled());
+
     }
 
     private void addDrive() {
         driveSubsystem = new DriveSubsystem();
         driveCommand = new DriveCommand(driveSubsystem, joystick);
         driveSubsystem.setDefaultCommand(driveCommand);
+       
     }
 
     private void addBall() {
@@ -99,6 +105,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        System.out.println("getAutononmousCommand ");
+        // return new RotateCommand(targetAngleDegrees, driveSubsystem);
         return new AutonomousComand(driveSubsystem, ballSubsystem);
     }
 }

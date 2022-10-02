@@ -14,8 +14,8 @@ public class DriveCommand extends CommandBase {
     private double maximumAcceleration;
     // Positive Value
 
-    private final SmartDashboardParam accelerationSlewRate = new SmartDashboardParam("accelerationSlewRate", 0.05);
-    private final SmartDashboardParam deccelerationSlewRate = new SmartDashboardParam("deccelerationSlewRate", 1);
+    private final SmartDashboardParam accelerationSlewRate = new SmartDashboardParam("accelerationSlewRate", 0.03);
+    private final SmartDashboardParam deccelerationSlewRate = new SmartDashboardParam("deccelerationSlewRate", 0.1);
 
     private double previousSpeed;
 
@@ -71,9 +71,9 @@ public class DriveCommand extends CommandBase {
         speedRot *= Math.abs(speedRot) < 0.05 ? 0 : 1;
        
         if (speedRot > .05){
-            speedRot = speedRot * .65 + .25;
+            speedRot = speedRot * .50 + .25;
         } else if (speedRot < -.05) {
-            speedRot = speedRot * .65 - .25;
+            speedRot = speedRot * .50 - .25;
         } else {
             speedRot = 0;
         }
