@@ -109,6 +109,15 @@ public class DriveSubsystem extends SubsystemBase {
         double rotationInputClamped = output > voltageClampValue ? voltageClampValue :
             (output < -voltageClampValue ? -voltageClampValue : output);
 
+        double k = 0.2;
+        double amplitude = Math.abs(rotationInputClamped);
+        if (rotationInputClamped < 0) {
+            rotationInputClamped = -(k + (1 - k) * amplitude);
+        } else {
+            rotationInputClamped = k + (1 - k) * amplitude;
+        }
+        
+        System.out.println("PID Controller Output:" + output + " " + rotationInputClamped);
         setDrive(0, rotationInputClamped);
     }
 
@@ -116,7 +125,17 @@ public class DriveSubsystem extends SubsystemBase {
         double voltageClampValue = voltageClamp.get();
         double driveInputClamped = output > voltageClampValue ? voltageClampValue :
             (output < -voltageClampValue ? -voltageClampValue : output);
-        setDrive(driveInputClamped, 0);
+
+        double k = 0.4;
+        double amplitude = Math.abs(driveInputClamped);
+        if (driveInputClamped < 0) {
+            driveInputClamped = -(k + (1 - k) * amplitude);
+        } else {
+            driveInputClamped = k + (1 - k) * amplitude;
+        }
+
+        setDrive(-driveInputClamped, 0);
+        System.out.println("Voltage Clamped: " + driveInputClamped);
     }
 
     private double nativeUnitsToDistanceMeters(double sensorCounts){

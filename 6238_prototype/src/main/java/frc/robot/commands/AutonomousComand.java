@@ -53,9 +53,11 @@ public class AutonomousComand extends CommandBase {
         return timeElapsed > timeLimit;
     }
 
+
     @Override
     public void end(boolean interrupted) {
         drive.setDrive(0,0);
+        System.out.println("Finished Autonomous Command");
     }
     
 }

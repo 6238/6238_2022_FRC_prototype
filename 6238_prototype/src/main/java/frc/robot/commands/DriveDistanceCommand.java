@@ -1,4 +1,4 @@
-package frc.robot.commands.deprecated;
+package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,8 +20,8 @@ public class DriveDistanceCommand extends PIDCommand{
 
     private long startTime;
 
-    static private final double kSpeedToleranceMetersPerS = 0.00001;
-    static private final double kDistanceToleranceMeters = 0.0001;
+    static private final double kSpeedToleranceMetersPerS = 0.01;
+    static private final double kDistanceToleranceMeters = 0.01;
 
     public DriveDistanceCommand(double targetDistanceMeters, DriveSubsystem driveSubsystem) {
         super(
@@ -64,11 +64,11 @@ public class DriveDistanceCommand extends PIDCommand{
             getController().setD(kD);
         }
         SmartDashboard.putNumber("Distance Error", driveSubsystem.getPosition() - target);
-        System.out.println(driveSubsystem.getPosition() - target);
+        System.out.println("Distance Error: " + m_controller.getPositionError());
     }
 
     @Override
     public boolean isFinished() {
-        return getController().atSetpoint() || (System.currentTimeMillis() - startTime > 3000);
+        return getController().atSetpoint(); // || (System.currentTimeMillis() - startTime > 3000);
     }
 }

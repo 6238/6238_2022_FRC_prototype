@@ -14,10 +14,10 @@ public class RotateCommand extends PIDCommand {
 
     SmartDashboardParam kPSlider = new SmartDashboardParam("kPAutonomousDrive", 0.03);
     SmartDashboardParam kISlider = new SmartDashboardParam("kIAutonomousDrive", 0);
-    SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive", 0);
+    SmartDashboardParam kDSlider = new SmartDashboardParam("kDAutonomousDrive", 0.0015);
 
     static private final double kTurnRateToleranceDegPerS = 2.0;
-    static private final double kTurnToleranceDeg = 2.0;
+    static private final double kTurnToleranceDeg = 2;
 
     public RotateCommand(double targetAngleDegrees, DriveSubsystem driveSubsystem) {
         super(
@@ -63,16 +63,18 @@ public class RotateCommand extends PIDCommand {
             getController().setD(kDSlider.get());
         }
         //log of how far we are
-        SmartDashboard.putNumber("Rotate Error", driveSubsystem.getAngle() - target);
-        System.out.println("Rotate Error: " + (driveSubsystem.getAngle() - target));
+        SmartDashboard.putNumber("PID Controller Rotation Error: ", m_controller.getPositionError());
+        System.out.println("PID Controller Rotation Error: " + m_controller.getPositionError());
+        SmartDashboard.putNumber("Gyro Rotation Error: ", driveSubsystem.getAngle() - target);
+        System.out.println("Gyro Rotation Error: " + (driveSubsystem.getAngle() - target));  
     }
     
     @Override
     public boolean isFinished() {
         //debugging
         if(getController().atSetpoint()) System.out.println("At Setpoint");
-        if( System.currentTimeMillis() - startTime > waitTime) System.out.print("Time Reached");
+        // if( System.currentTimeMillis() - startTime > waitTime) System.out.print("Time Reached");
         //actually returning
-        return getController().atSetpoint() || System.currentTimeMillis() - startTime > waitTime;
+        return getController().atSetpoint();  // || System.currentTimeMillis() - startTime > waitTime;
     }
 }

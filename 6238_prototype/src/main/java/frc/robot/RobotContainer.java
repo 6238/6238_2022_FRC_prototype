@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.PrototypeAutonomousCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.commands.StopShooterCommand;
@@ -19,7 +20,6 @@ import frc.robot.commands.Intake.ExtendIntakeCommand;
 import frc.robot.commands.Intake.RetractIntakeCommand;
 import frc.robot.commands.Intake.RunIntakeCommand;
 import frc.robot.commands.ShooterCommand.PneumaticKickers;
-import frc.robot.commands.deprecated.DriveDistanceCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.AutonomousComand;
 import frc.robot.subsystems.BallSubsystem;
@@ -108,6 +108,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new TimedDriveCommand(driveSubsystem, 2.0);// PrototypeAutonomousCommand(ballSubsystem, driveSubsystem);
+        // return new TimedDriveCommand(driveSubsystem, 2.0);// PrototypeAutonomousCommand(ballSubsystem, driveSubsystem);
+        return new DriveDistanceCommand(2, driveSubsystem);
     }
 }
